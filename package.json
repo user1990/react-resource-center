@@ -10,47 +10,19 @@
     "react-scripts": "1.0.14",
     "react-tap-event-plugin": "^3.0.2"
   },
-  "devDependencies": {
-    "babel-eslint": "^8.0.1",
-    "husky": "^0.14.3",
-    "lint-staged": "^4.2.3",
-    "prettier": "^1.7.4",
-    "standard": "^10.0.3"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "lint": "eslint src",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "lint": "prettier 'src/**/*.js' 'src/components/**/*.js' '*.js' --write --single-quote && standard --fix"
+    "eject": "react-scripts eject"
   },
-  "lint-staged": {
-    "*.js": [
-      "prettier --write --single-quote",
-      "standard --fix",
-      "git add"
-    ]
-  },
-  "standard": {
-    "globals": [
-      "fetch",
-      "FormData",
-      "describe",
-      "it",
-      "beforeEach",
-      "expect",
-      "handleClose",
-      "state",
-      "handleNext",
-      "handlePrev",
-      "handleChange",
-      "formatLabelToProperty",
-      "handleFilePath",
-      "handleFormData",
-      "handleDialogClose",
-      "componentDidMount",
-      "handleTabChange"
-    ],
-    "parser": "babel-eslint"
+  "devDependencies": {
+    "babel-eslint": "^8.0.1",
+    "eslint": "^4.3.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.1.0"
   }
 }
