@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from '../components/MaterializeRaisedButton';
+import '../styles/inputFile.scss';
 
 const styles = {
   block: {
@@ -11,10 +12,47 @@ const styles = {
   checkbox: {
     marginBottom: 16,
   },
+  button: {
+    margin: 12,
+  },
+  exampleImageInput: {
+    cursor: 'pointer',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    width: '100%',
+    opacity: 0,
+  },
 };
 
 class ServiceRequest extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { fileInput: [] };
+  }
+
+  handleFilePath = () => {
+    const file = document.getElementById('upload').files;
+    if (file.length === 0) {
+      this.setState({
+        fileInput: null,
+      });
+    } else {
+      let fileNames = '';
+      for (let i = 0; i < file.length; i++) {
+        fileNames = `${file[i].name}`;
+      }
+      this.setState({
+        fileInput: fileNames,
+      })
+    }
+  }
+
   render() {
+    const fileValue = this.state.fileInput || 'Select a file to upload';
+
     return (
       <div className='container'>
         <div className='row'>
@@ -103,7 +141,35 @@ class ServiceRequest extends Component {
             <DatePicker hintText='Portrait Dialog' />
           </div>
           <div className='col s12 m6'>
-            <DatePicker hintText='File Upload' />
+            <div className='file-field input-field'>
+              <div className='btn'>
+                <span>Upload File</span>
+                <input
+                  id='upload'
+                  type='file'
+                  multiple
+                  onChange={this.handleFilePath}
+                />
+              </div>
+              <div className='file-path-wrapper'>
+                <input
+                  value={fileValue}
+                  className='file-path validate'
+                  type='text'
+                  readOnly
+                />
+              </div>
+            </div>
+            {/* This is how Material-UI display an upload button (uncomment it)
+              <RaisedButton
+                label="Choose an Image"
+                labelPosition="before"
+                style={styles.button}
+                containerElement="label"
+              >
+                <input type="file" style={styles.exampleImageInput} />
+              </RaisedButton>
+            */}
           </div>
           <div className='col s12 m6'>
             <Checkbox label='Simple' style={styles.checkbox} />
@@ -124,8 +190,8 @@ class ServiceRequest extends Component {
             <Checkbox label='Simple' style={styles.checkbox} />
           </div>
           <div className='col s12'>
-            <Checkbox label='Simple' style={styles.checkbox} />
             <RaisedButton label='Submit' primary />
+            <Checkbox label='Simple' style={styles.checkbox} />
           </div>
         </div>
       </div>
