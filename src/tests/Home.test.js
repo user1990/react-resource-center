@@ -2,7 +2,7 @@
 import nightmare from 'nightmare';
 
 const visit = (path) => {
-  return nightmare().goto(`http://localhost:3000${path}`);
+  return nightmare().goto(`http://localhost:3000/${path}`);
 };
 
 describe('Home Page', () => {
