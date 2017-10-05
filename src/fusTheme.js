@@ -1,3 +1,4 @@
+/*eslint-disable */
 /**
  * More info here: http://www.material-ui.com/#/customization/themes
 **/
