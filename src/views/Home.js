@@ -8,75 +8,77 @@ class Home extends Component {
     return (
       <div className='container'>
         <div className='row'>
-          <div className='col s3 m4'>
+          <div className='col s12 m4'>
             <Card>
               <CardTitle title='Card title' subtitle='Card subtitle' />
               <CardText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
-                sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
-                pellentesque lobortis odio.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+                      mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
+                      sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
+                      pellentesque lobortis odio.
               </CardText>
             </Card>
           </div>
-          <div className='col s3 m4'>
+          <div className='col s12 m4'>
             <Card>
               <CardTitle title='Card title' subtitle='Card subtitle' />
               <CardText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
-                sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
-                pellentesque lobortis odio.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+                      mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
+                      sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
+                      pellentesque lobortis odio.
               </CardText>
             </Card>
           </div>
-          <div className='col s3 m4'>
+          <div className='col s12 m4'>
             <Card>
               <CardTitle title='Card title' subtitle='Card subtitle' />
               <CardText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
-                sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
-                pellentesque lobortis odio.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+                      mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
+                      sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
+                      pellentesque lobortis odio.
               </CardText>
             </Card>
           </div>
-          <div className='col s3 m4'>
+        </div>
+        <div className='row'>
+          <div className='col s12 m4'>
             <Card>
               <CardTitle title='Card title' subtitle='Card subtitle' />
               <CardText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
-                sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
-                pellentesque lobortis odio.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+                      mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
+                      sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
+                      pellentesque lobortis odio.
               </CardText>
             </Card>
           </div>
-          <div className='col s3 m4'>
+          <div className='col s12 m4'>
             <Card>
               <CardTitle title='Card title' subtitle='Card subtitle' />
               <CardText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
-                sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
-                pellentesque lobortis odio.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+                      mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
+                      sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
+                      pellentesque lobortis odio.
               </CardText>
             </Card>
           </div>
-          <div className='col s3 m4'>
+          <div className='col s12 m4'>
             <Card>
               <CardTitle title='Card title' subtitle='Card subtitle' />
               <CardText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
-                sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
-                pellentesque lobortis odio.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+                      mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam
+                      sed pellentesque. Aliquam dui mauris, mattis quis lacus id,
+                      pellentesque lobortis odio.
               </CardText>
             </Card>
           </div>
