@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class PlanningGuide extends Component {
+class NotFound extends Component {
   render() {
     return (
       <div>
-        <h1>PlanningGuide View</h1>
+        <h1>NotFound View</h1>
       </div>
     );
   }
 }
 
-export default PlanningGuide;
+export default NotFound;

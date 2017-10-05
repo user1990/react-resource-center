@@ -34,6 +34,14 @@ module.exports = {
     // "react/jsx-no-literals": 1,
     "react/sort-prop-types": 2,
     "react/self-closing-comp": 2,
+    "react/prefer-stateless-function": 0,
+    "linebreak-style": 0,
+    "react/jsx-closing-bracket-location": 0,
+    "react/forbid-prop-types": 0,
+    "react/no-unused-prop-types": 0,
+    "object-shorthand": 0,
+    "react/jsx-curly-spacing": 0,
+    "arrow-body-style": 0,
     "max-len": [
       2,
       120
