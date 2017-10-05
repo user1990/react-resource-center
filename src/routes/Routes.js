@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import fusTheme from '../fusTheme';
+import fusTheme from '../components/fusTheme';
 // Components
 import SideNav from '../components/SideNav';
 // import ScrollIntoView from '../components/ScrollIntoView';
@@ -23,9 +23,8 @@ import Story from '../views/Story';
 import Tutorial from '../views//Tutorial';
 import NotFound from '../views/NotFound';
 // Styles
-import '../App.css';
-// import '../styles/App.css'
-// import '../styles/materialize-grid.css'
+import '../styles/App.scss';
+import '../styles/materialize-grid.scss';
 
 injectTapEventPlugin();
 

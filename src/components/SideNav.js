@@ -9,12 +9,9 @@ import fusLogo from '../img/fus-logo.svg';
 import links from '../data/linksData';
 
 class SideNav extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { open: false };
-  }
+  state = { open: false }
 
-  handleClose = () => this.setState({ open: false });
+  handleClose = () => this.setState({ open: false })
 
   render() {
     return (
@@ -25,6 +22,13 @@ class SideNav extends Component {
               <img src={fusLogo} alt='Franciscan University Logo' />
             </Link>
           }
+          className='app-bar'
+          iconElementRight={
+            <h1 className='hide-on-small-only'>Resource Center</h1>
+          }
+          onLeftIconButtonTouchTap={() =>
+            this.setState({ open: !this.state.open })}
+          style={{ backgroundColor: '#fff', color: '#21412a' }}
         />
         <Drawer
           open={this.state.open}
@@ -32,15 +36,17 @@ class SideNav extends Component {
           onRequestChange={open => this.setState({ open })}
         >
           <List>
-            {map(links, ({ isExact, linkTo, text }, key) => (
-              <SideBarItem
-                isExact={isExact}
-                linkTo={linkTo}
-                primaryText={text}
-                onClick={this.handleClose}
-                key={key}
-              />
-            ))}
+            {map(links, ({ isExact, linkTo, text }, key) => {
+              return (
+                <SideBarItem
+                  isExact={isExact}
+                  linkTo={linkTo}
+                  primaryText={text}
+                  onClick={this.handleClose}
+                  key={key}
+                />
+              );
+            })}
           </List>
         </Drawer>
       </div>
