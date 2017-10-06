@@ -8,11 +8,13 @@
     "formidable": "^1.1.1",
     "lodash": "^4.17.4",
     "material-ui": "^0.19.3",
+    "prop-types": "^15.6.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.2",
     "react-scripts": "1.0.14",
-    "react-tap-event-plugin": "^2.0.1"
+    "react-tap-event-plugin": "^2.0.1",
+    "sendgrid": "^5.2.0"
   },
   "scripts": {
     "start-js": "react-scripts start",
