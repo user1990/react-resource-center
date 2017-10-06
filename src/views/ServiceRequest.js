@@ -32,8 +32,21 @@ class ServiceRequest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fileInput: [],
+      fileInput: null,
+      name: '',
+      email: '',
+      phone: '',
     };
+  }
+
+  handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
   }
 
   handleFilePath = () => {
@@ -65,13 +78,32 @@ class ServiceRequest extends Component {
         </div>
         <div className='row'>
           <div className='col s12 m6'>
-            <TextField floatingLabelText='Name' fullWidth />
+            <TextField
+              floatingLabelText='Name'
+              name='name'
+              value={this.state.name}
+              onChange={this.handleInputChange}
+              fullWidth
+            />
           </div>
           <div className='col s12 m6'>
-            <TextField floatingLabelText='Email' fullWidth />
+            <TextField
+              floatingLabelText='Email'
+              name='email'
+              value={this.state.email}
+              onChange={this.handleInputChange}
+              type='email'
+              fullWidth
+            />
           </div>
           <div className='col s12 m6'>
-            <TextField floatingLabelText='Phone' fullWidth />
+            <TextField
+              floatingLabelText='Phone'
+              name='phone'
+              value={this.state.phone}
+              onChange={this.handleInputChange}
+              fullWidth
+            />
           </div>
           <div className='col s12 m6'>
             <TextField floatingLabelText='Department' fullWidth />
@@ -188,7 +220,7 @@ class ServiceRequest extends Component {
               label={
                 <span>
                   I have read the{''}
-                  <Link exact to='/planning-guide' style={{ fontWeight: 500 }}>
+                  <Link to='/planning-guide' style={{ fontWeight: 500 }}>
                     Planning Guide
                   </Link>
                 </span>
