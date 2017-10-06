@@ -45,6 +45,8 @@ module.exports = {
     "max-len": [
       2,
       120
-    ]
+    ],
+    "no-plusplus": 0,
+    "comma-dangle": [2, "always-multiline"]
   }
 };
