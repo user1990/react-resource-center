@@ -2,9 +2,17 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const formidable = require('formidable');
+require('dotenv').config();
+
 const PORT = process.env.PORT || 5000;
+const CLIENT_PORT = process.env.PORT || 3000;
+const PROTOCOL = process.env.PROTOCOL || 'http';
+const HOSTNAME = process.env.HOST || 'localhost';
 const UPLOAD_DIR = path.join(__dirname, 'uploads/');
-const CORS = process.env.NODE_ENV === 'production' ? process.env.HOST : '*';
+const CORS =
+  process.env.NODE_ENV === 'production'
+    ? `${PROTOCOL}://${HOSTNAME}`
+    : `${PROTOCOL}://${HOSTNAME}:${CLIENT_PORT}`;
 
 const app = express();
 
