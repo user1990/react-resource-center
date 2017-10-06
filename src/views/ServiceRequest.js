@@ -49,14 +49,15 @@ class ServiceRequest extends Component {
     });
   }
 
-  handleFilePath = () => {
-    const file = Array.from(document.getElementById('upload').files);
-    if (file.length === 0) {
+  handleFilePath = (event) => {
+    const target = event.target;
+    const files = Array.from(target.files);
+    if (files.length === 0) {
       this.setState({
         fileInput: null,
       });
     } else {
-      const fileNames = file.map(f => f.name).join(', ');
+      const fileNames = files.map(f => f.name).join(', ');
       this.setState({
         fileInput: fileNames,
       });
