@@ -48,6 +48,7 @@ module.exports = {
       120
     ],
     "no-plusplus": 0,
-    "comma-dangle": [2, "always-multiline"]
+    "comma-dangle": [2, "always-multiline"],
+    "no-console": 0
   }
 };

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
@@ -118,6 +119,17 @@ class ServiceRequest extends Component {
     }
   }
 
+  handleFormData = () => {
+    const data = new FormData();
+    for (const [key, val] of Object.entries(this.state)) data.append(key, val);
+    for (const file of this.uploadInput.files) data.append('file', file);
+
+    fetch('/uploads', {
+      method: 'post',
+      body: data,
+    }).then((response) => {});
+  }
+
   render() {
     const fileValue = this.state.fileInput || 'Select a file to upload';
 
@@ -179,9 +191,13 @@ class ServiceRequest extends Component {
                 <span>Upload Files</span>
                 <input
                   id='upload'
+                  name='upload[]'
                   type='file'
                   multiple
                   onChange={this.handleFilePath}
+                  ref={(input) => {
+                    this.uploadInput = input;
+                  }}
                 />
               </div>
               <div className='file-path-wrapper'>
@@ -205,7 +221,10 @@ class ServiceRequest extends Component {
             })}
           </div>
           <div className='col s12'>
-            <RaisedButton label='Submit' primary />
+            <RaisedButton
+              label='Submit'
+              onClick={this.handleFormData}
+              primary />
             <Checkbox
               label={
                 <span>
