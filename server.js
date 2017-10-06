@@ -1,8 +1,21 @@
-/* eslint-disable */
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const formidable = require('formidable');
+
+const PORT = process.env.PORT || 5000;
+const UPLOAD_DIR = path.join(__dirname, 'uploads/');
 const app = express();
+
+if (!fs.existsSync(UPLOAD_DIR)) {
+  console.warn('==========================');
+  console.warn('Creating uploads folder...');
+  console.warn('==========================');
+  fs.mkdirSync(UPLOAD_DIR);
+}
+console.info('======================================');
+console.info(`Uploads will be saved in ${UPLOAD_DIR}`);
+console.info('======================================');
 
 app.use(express.static(path.join(__dirname, 'build')));
 
@@ -11,23 +24,30 @@ app.get('/*', (req, res) => {
 });
 
 app.post('/uploads', (req, res) => {
-  let form = new formidable.IncomingForm();
+  const form = new formidable.IncomingForm();
 
   form.parse(req);
 
   form.on('fileBegin', (name, file) => {
-    file.path = `${__dirname}/uploads/${file.name}`;
+    file.path = `${UPLOAD_DIR}${file.name}`;
   });
 
   form.on('file', (name, file) => {
     console.log(`Uploaded ${file.name}`);
   });
 
-  res.json({ success: true, status: 'Form successfully﻿ submitted' });
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  res.status(200).json({
+    success: true,
+    status: 'Form successfully submitted',
+  });
 });
 
-app.listen(5000);
-
-console.log('====================');
-console.log('Server running on port 5000');
-console.log('====================');
+app.listen(PORT, _ =>
+  console.info('============================'),
+console.info(`Server listening on PORT ${PORT}...`),
+console.info('============================'));
