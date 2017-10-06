@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import '../styles/video.css';
+import '../styles/video.scss';
 
 class Tutorial extends Component {
   constructor(props) {
