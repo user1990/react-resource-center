@@ -33,6 +33,7 @@ module.exports = {
     "react/jsx-closing-bracket-location": [2, {selfClosing: "after-props", nonEmpty: "after-props"}],
     // "react/jsx-no-literals": 1,
     "react/sort-prop-types": 2,
+    "react/no-did-mount-set-state": 0,
     "react/self-closing-comp": 2,
     "react/prefer-stateless-function": 0,
     "linebreak-style": 0,
