@@ -2,9 +2,10 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const formidable = require('formidable');
-
 const PORT = process.env.PORT || 5000;
 const UPLOAD_DIR = path.join(__dirname, 'uploads/');
+const CORS = process.env.NODE_ENV === 'production' ? process.env.HOST : '*';
+
 const app = express();
 
 if (!fs.existsSync(UPLOAD_DIR)) {
@@ -36,7 +37,7 @@ app.post('/uploads', (req, res) => {
     console.log(`Uploaded ${file.name}`);
   });
 
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', CORS);
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept'
