@@ -49,6 +49,7 @@ module.exports = {
     ],
     "no-plusplus": 0,
     "comma-dangle": [2, "always-multiline"],
-    "no-console": 0
+    "no-console": 0,
+    "quotes": ["error", "single", { "allowTemplateLiterals": true }]
   }
 };
