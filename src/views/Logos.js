@@ -1,31 +1,84 @@
 import React, { Component } from 'react';
-import { CardTitle } from 'material-ui/Card';
+import Masonry from 'react-masonry-component';
+import FlatButton from 'material-ui/FlatButton';
 import { GenericCard } from './../components/GenericCard';
+import '../styles/logos.scss';
+// import logos from '../data/logoData';
+import { logos } from '../data/logoData';
 
 class Logos extends Component {
+  state = {
+    activeTab: 'all',
+    data: logos,
+    type: 'all',
+  }
   render() {
-    return (
-      <div className='row'>
-        <div className='col m6'>
-          <GenericCard
-            headerTitle='Hello'
-            headerAvatar='http://via.placeholder.com/140x100'
-            mediaImgSrc='http://via.placeholder.com/120x100'
-            overlay={
-              <CardTitle
-                title='Nice Job'
-                subtitle='Congratulations on this great Achievement'
+    const { activeTab } = this.state;
+    const tabs = {
+      all: 'All',
+      alumni: 'Alumni',
+      text: 'Text',
+      athletics: 'Athletics',
+      video: 'Video',
+      austrian: 'Austrian',
+      conference: 'Conference',
+      franciscan: 'Franciscan',
+      grad: 'Grad School',
+      iheart: 'IHeart',
+      online: 'Online',
+      pilgrimages: 'Pilgrimages',
+      press: 'Press',
+      seal: 'Seal',
+      yom: 'Year of Mercy',
+    };
+
+    const massonryComp = (
+      <Masonry>
+        {this.state.data
+          .filter(logo => activeTab === 'all' || activeTab === logo.category)
+          .map((logo, i) =>
+            (<div className='col s12 m6 l4 xl3' key={i}>
+              <GenericCard
+                mediaImgSrc={`https://myfranciscan.franciscan.edu/ICS/clientconfig/customcontent/marcom/MarComTab/${logo.thumbnailUrl}`}
+                actions={
+                  <div>
+                    <FlatButton label='JPG' />
+                    <FlatButton label='PSD' />
+                  </div>
+                }
               />
-            }
-            cardTitle='Nice one'
-            cardSubtitle='Looking good'
-          >
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam
-            iusto, quis dignissimos fugiat qui architecto. Numquam illum dolor
-            officia qui sit possimus sint quisquam provident, a laudantium
-            reiciendis asperiores perferendis!
-          </GenericCard>
+            </div>)
+          )}
+      </Masonry>
+    );
+    return (
+      <div>
+        <div className='row'>
+          <div className='col s12'>
+            <ul className='tabs'>
+              {Object.keys(tabs).map(tabKey =>
+                (
+                  <li className='tab' key={`${tabKey}'li'`}>
+                    <a
+                      key={tabKey}
+                      href={`'#'${tabKey}`}
+                      className={tabKey === activeTab && 'active'}
+                      onClick={() => this.setState({ activeTab: tabKey })}>
+                      {tabs[tabKey]}
+                    </a>
+                  </li>
+                )
+              )}
+            </ul>
+          </div>
         </div>
+        {/* For each tab, we generate a row */}
+        {Object.keys(tabs).map(tabKey =>
+          (<div className='row' id={tabKey} key={tabKey}>
+            {/* We render masonry comp only if we are in current active tab key */}
+            {activeTab === tabKey && massonryComp}
+          </div>)
+        )}
       </div>
     );
   }
