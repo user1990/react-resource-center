@@ -42,9 +42,22 @@ const wrikeMkFolder = name =>
     method: 'post',
     headers: {
       Authorization: `bearer ${process.env.WRIKE_TOKEN}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      ContentType: 'application/xwwwformurlencoded',
     },
-  }).then(res => res.text());
+  }).then(res => res.json());
+
+const wrikeAddAttachments = (id, file, name, type) =>
+  fetch(`https://www.wrike.com/api/v3/folders/${id}/attachments`, {
+    body: file,
+    method: 'post',
+    headers: {
+      Authorization: `bearer ${process.env.WRIKE_TOKEN}`,
+      xrequestedwith: 'XMLHttpRequest',
+      xfilename: name,
+      contenttype: type,
+      cachecontrol: 'nocache',
+    },
+  }).then(res => res.json());
 
 const toEmail = new helper.Email('paulius.rimg1990@gmail.com');
 
@@ -75,19 +88,19 @@ app.post('/uploads', (req, res) => {
   const form = new formidable.IncomingForm();
 
   // In any case send the cors headers (even on error)
-  res.header('Access-Control-Allow-Origin', CORS);
+  res.header('AccessControlAllowOrigin', CORS);
   res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
+    'AccessControlAllowHeaders',
+    'Origin, XRequestedWith, ContentType, Accept'
   );
 
   form.parse(req);
 
   // The events we subscribe to in the form occur in the following order
-  // field - multiple times
-  // fileBegin then file - once per file
-  // error - only if there was a parsing error
-  // end - when all other events have been handled and the files have
+  // field  multiple times
+  // fileBegin then file  once per file
+  // error  only if there was a parsing error
+  // end  when all other events have been handled and the files have
   //       finished being written to the disk, this event happens even
   //       if there was an error
 
@@ -97,6 +110,12 @@ app.post('/uploads', (req, res) => {
 
   form.on('file', (name, file) => {
     console.log(`Uploaded ${file.name}`);
+  });
+
+  const files = [];
+
+  form.on('file', (name, file) => {
+    files.push(file);
   });
 
   const fields = {};
@@ -153,9 +172,32 @@ app.post('/uploads', (req, res) => {
       });
     }
 
+    // Create project and attach files in wrike
     wrikeMkFolder('test')
-      .then(status => console.log(status))
-      .catch(console.log);
+      .then((status) => {
+        const folderId = status.data[0].id;
+        // eslint-disable-next-line
+        for (const file of files) {
+          // Formidable files are just metadata, not the actual file
+          // Use the file name to create a ReadStream and pass it to
+          // node-fetch which can handle ReadStreams
+          // To pass a ReadStream is something like piping the file
+          // instead of reading the whole file and passing it
+          const readStream = fs.createReadStream(file.path);
+          wrikeAddAttachment(
+            folderId,
+            readStream,
+            file.name,
+            file.type
+          ).catch((err) => {
+            console.log(`Error while reading file for upload to Wrike: ${err}`);
+            console.log(`Filename: ${file.path}`);
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(`Error while creating a project in Wrike: ${err}`);
+      });
 
     // Send the success response
     res
