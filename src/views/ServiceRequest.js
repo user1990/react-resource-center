@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import RaisedButton from '../components/MaterializeRaisedButton';
 import '../styles/inputFile.scss';
 
-const PORT = process.env.UPLOADS_PORT || 9000;
+const PORT = process.env.SERVER_PORT || 9000;
 const HOST = process.env.UPLOADS_HOST || window.location.host.split(':')[0];
 const UPLOAD_URL = `http://${HOST}:${PORT}/uploads`;
 
@@ -288,11 +288,7 @@ class ServiceRequest extends Component {
               />
             </div>
           </div>
-          <Dialog
-            title='Loading...'
-            modal
-            open={this.state.loadingDialogOpen}
-          >
+          <Dialog title='Loading...' modal open={this.state.loadingDialogOpen}>
             Sending service request
           </Dialog>
           <Dialog
