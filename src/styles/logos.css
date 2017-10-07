@@ -1,0 +1,13 @@
+.tabs {
+  list-style-type: none;
+  text-align: center; }
+  .tabs .tab {
+    margin: 0 8px;
+    display: inline; }
+    .tabs .tab a {
+      padding: 8px; }
+
+.logo-card-container {
+  margin-bottom: 24px; }
+  .logo-card-container .img-container {
+    padding: 8px 8px 0 8px; }
