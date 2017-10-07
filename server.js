@@ -26,7 +26,9 @@ if (ENABLE_SEND_EMAILS) {
 const queryParams = obj =>
   Object.keys(obj)
     .map(key => [key, obj[key]]) // There is no Object.entries() in node 6
-    .map(([key, val]) => `${key}=${val}`)
+    .map(
+      ([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`
+    )
     .join('&');
 
 const wrikeMkFolder = name =>
