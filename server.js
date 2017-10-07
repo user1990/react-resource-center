@@ -4,6 +4,7 @@ const fs = require('fs');
 const formidable = require('formidable');
 const helper = require('sendgrid').mail;
 require('dotenv').config();
+const sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 9000;
@@ -13,10 +14,16 @@ const HOSTNAME = process.env.HOST || 'localhost';
 const UPLOAD_DIR = path.join(__dirname, 'uploads/');
 const CORS =
   process.env.NODE_ENV === 'production' ? `${PROTOCOL}://${HOSTNAME}` : `*`;
+const ENABLE_SEND_EMAILS =
+  process.env.NODE_ENV === 'production' || process.env.ENABLE_SEND_EMAILS;
+
+if (ENABLE_SEND_EMAILS) {
+  console.info('Sending emails is enabled');
+} else {
+  console.info('Sending emails is disabled');
+}
 
 const toEmail = new helper.Email('paulius.rimg1990@gmail.com');
-
-const sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 
 const makeSgRequest = body =>
   sg.emptyRequest({
@@ -83,7 +90,10 @@ app.post('/uploads', (req, res) => {
     console.log('Error while parsing request to /uploads: ', err);
     res
       .status(400) // Bad request
-      .json({ success: false, status: 'Error parsing the request' });
+      .json({
+        success: false,
+        status: 'Error parsing the request',
+      });
   });
 
   form.on('end', () => {
@@ -100,8 +110,7 @@ app.post('/uploads', (req, res) => {
     // Here is a good place to send the emails since we have the fields
     // We don't want to actually send emails during testing since it
     // would send a test email on every single commit
-    const testing = fields.hasOwnProperty('testing');
-    if (!testing) {
+    if (ENABLE_SEND_EMAILS) {
       const fromEmail = new helper.Email('test@example.com');
       const subject = 'Sending with SendGrid is Fun';
       const content = new helper.Content(
