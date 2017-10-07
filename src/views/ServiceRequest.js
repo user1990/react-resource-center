@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import Checkbox from 'material-ui/Checkbox';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router-dom';
 import RaisedButton from '../components/MaterializeRaisedButton';
 import '../styles/inputFile.scss';
@@ -91,6 +93,10 @@ class ServiceRequest extends Component {
       form: {
         fileInput: null,
       },
+      loadingDialogOpen: false,
+      resultDialogOpen: false,
+      resultdialogText: null,
+      resultdialogSuccess: true,
     };
     Object.assign(this.state.form, stringProps, checkboxProps);
   }
@@ -122,7 +128,7 @@ class ServiceRequest extends Component {
     this.setState({ form });
   }
 
-  handleFormData = () => {
+  handleFormData = async () => {
     const data = new FormData();
     // eslint-disable-next-line
     for (const [key, val] of Object.entries(this.state.form)) {
@@ -131,10 +137,38 @@ class ServiceRequest extends Component {
     // eslint-disable-next-line    
     for (const file of this.uploadInput.files) data.append('file', file);
 
-    fetch(UPLOAD_URL, {
-      method: 'post',
-      body: data,
-    }).then((res) => {});
+    this.setState({ loadingDialogOpen: true });
+
+    try {
+      const response = await fetch(UPLOAD_URL, {
+        method: 'post',
+        body: data,
+      }).then(res => res.json());
+
+      if (!response.success) { throw response.status; }
+
+      this.setState({
+        resultDialogOpen: true,
+        resultdialogSuccess: true,
+        resultdialogText: 'Your service request was sent successfully.',
+      });
+    } catch (err) {
+      const msg =
+        typeof err === 'string'
+          ? err
+          : 'An error accured while sending the request.';
+      this.setState({
+        resultDialogOpen: true,
+        resultdialogSuccess: false,
+        resultdialogText: msg,
+      });
+    }
+
+    this.setState({ loadingDialogOpen: false });
+  }
+
+  handleDialogClose = () => {
+    this.setState({ resultDialogOpen: false });
   }
 
   render() {
@@ -254,6 +288,28 @@ class ServiceRequest extends Component {
               />
             </div>
           </div>
+          <Dialog
+            title='Loading...'
+            modal
+            open={this.state.loadingDialogOpen}
+          >
+            Sending service request
+          </Dialog>
+          <Dialog
+            title={this.state.resultDialogSuccess ? 'Done' : 'Error'}
+            modal={false}
+            open={this.state.resultDialogOpen}
+            onRequestClose={this.handleDialogClose}
+            actions={[
+              <FlatButton
+                label='Ok'
+                onTouchTap={this.handleDialogClose}
+                keyboardFocused
+              />,
+            ]}
+          >
+            this.state.resultdialogText
+          </Dialog>
         </div>
       </div>
     );
