@@ -36,6 +36,8 @@ const wrikeMkFolder = name =>
     body: queryParams({
       title: name,
       description: 'folder description',
+      shareds: process.env.WRIKE_SHARE_ID,
+      project: process.env.WRIKE_OWNER_ID,
     }),
     method: 'post',
     headers: {
