@@ -15,11 +15,18 @@ const HOSTNAME = process.env.HOST || 'localhost';
 const UPLOAD_DIR = path.join(__dirname, 'uploads/');
 const CORS = process.env.NODE_ENV === 'production' ? `${PROTOCOL}://${HOSTNAME}` : `*`;
 const ENABLE_SEND_EMAILS = process.env.NODE_ENV === 'production' || process.env.ENABLE_SEND_EMAILS === 'true';
+const ENABLE_WRIKE = process.env.NODE_ENV === 'production' || process.env.ENABLE_WRIKE === 'true';
 
 if (ENABLE_SEND_EMAILS) {
   console.info('Sending emails is enabled');
 } else {
   console.info('Sending emails is disabled');
+}
+
+if (ENABLE_WRIKE) {
+  console.info('Wrike integration is enabled');
+} else {
+  console.info('Wrike integration is disabled');
 }
 
 // This converts {a:1, b:2} into 'a=1&b=2'
@@ -31,11 +38,11 @@ const queryParams = obj =>
     )
     .join('&');
 
-const wrikeMkFolder = name =>
+const wrikeMkFolder = (name, content) =>
   fetch(process.env.WRIKE_URL, {
     body: queryParams({
       title: name,
-      description: 'folder description',
+      description: content,
       shareds: process.env.WRIKE_SHARE_ID,
       project: process.env.WRIKE_OWNER_ID,
     }),
@@ -58,8 +65,6 @@ const wrikeAddAttachments = (id, file, name, type) =>
       cachecontrol: 'nocache',
     },
   }).then(res => res.json());
-
-const toEmail = new helper.Email('paulius.rimg1990@gmail.com');
 
 const makeSgRequest = body =>
   sg.emptyRequest({
@@ -119,8 +124,10 @@ app.post('/uploads', (req, res) => {
   });
 
   const fields = {};
+  let fieldsString = '';
   form.on('field', (name, value) => {
     fields[name] = value;
+    fieldsString = `fieldsString${name}: ${value}<br />`;
   });
 
   // Handle a possible error while parsing the request
@@ -153,12 +160,10 @@ app.post('/uploads', (req, res) => {
     // We don't want to actually send emails during testing since it
     // would send a test email on every single commit
     if (ENABLE_SEND_EMAILS) {
+      const toEmail = new helper.Email('paulius.rimg1990@gmail.com');
       const fromEmail = new helper.Email('test@example.com');
-      const subject = 'Sending with SendGrid is Fun';
-      const content = new helper.Content(
-        'text/plain',
-        'and easy to do anywhere, even with Node.js'
-      );
+      const subject = 'New Service Request Form Submission';
+      const content = new helper.Content('text/plain', fieldsString);
       const mail = new helper.Mail(fromEmail, subject, toEmail, content);
       const request = makeSgRequest(mail);
       console.log('Sending email...');
@@ -173,31 +178,35 @@ app.post('/uploads', (req, res) => {
     }
 
     // Create project and attach files in wrike
-    wrikeMkFolder('test')
-      .then((status) => {
-        const folderId = status.data[0].id;
-        // eslint-disable-next-line
-        for (const file of files) {
-          // Formidable files are just metadata, not the actual file
-          // Use the file name to create a ReadStream and pass it to
-          // node-fetch which can handle ReadStreams
-          // To pass a ReadStream is something like piping the file
-          // instead of reading the whole file and passing it
-          const readStream = fs.createReadStream(file.path);
-          wrikeAddAttachment(
-            folderId,
-            readStream,
-            file.name,
-            file.type
-          ).catch((err) => {
-            console.log(`Error while reading file for upload to Wrike: ${err}`);
-            console.log(`Filename: ${file.path}`);
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(`Error while creating a project in Wrike: ${err}`);
-      });
+
+    if (ENABLE_WRIKE) {
+      // eslint-disable-next-line
+      wrikeMkFolder(fields['email'], fieldsString)
+        .then((status) => {
+          const folderId = status.data[0].id;
+          // eslint-disable-next-line
+          for (const file of files) {
+            // Formidable files are just metadata, not the actual file
+            // Use the file name to create a ReadStream and pass it to
+            // node-fetch which can handle ReadStreams
+            // To pass a ReadStream is something like piping the file
+            // instead of reading the whole file and passing it
+            const readStream = fs.createReadStream(file.path);
+            wrikeAddAttachment(
+              folderId,
+              readStream,
+              file.name,
+              file.type
+            ).catch((err) => {
+              console.log(`Error while reading file for upload to Wrike: ${err}`);
+              console.log(`Filename: ${file.path}`);
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(`Error while creating a project in Wrike: ${err}`);
+        });
+    }
 
     // Send the success response
     res
