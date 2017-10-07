@@ -11,3 +11,8 @@
   margin-bottom: 24px; }
   .logo-card-container .img-container {
     padding: 8px 8px 0 8px; }
+  .logo-card-container button span {
+    color: #ffb41f; }
+    .logo-card-container button span svg {
+      vertical-align: middle;
+      fill: #ffb41f; }
