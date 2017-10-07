@@ -12,6 +12,7 @@ import FlatButton from 'material-ui/FlatButton';
 export class GenericCard extends Component {
   render() {
     const {
+      actions,
       headerTitle,
       headerSubtitle,
       headerAvatar,
@@ -23,6 +24,7 @@ export class GenericCard extends Component {
       children,
       classes,
     } = this.props;
+    
     return (
       <Card className={classes}>
         {(headerTitle || headerAvatar) &&
@@ -36,14 +38,19 @@ export class GenericCard extends Component {
           <CardMedia className='image-container' overlay={overlay}>
             <img src={mediaImgSrc} alt={mediaImgAlt} />
           </CardMedia>}
-        <CardTitle title={cardTitle} subtitle={cardSubtitle} />
-        <CardText>
+        {cardTitle && 
+          <CardTitle 
+            title={cardTitle} 
+            subtitle={cardSubtitle} 
+            style={{ paddingBottom: '0' }}
+          />
+        <CardText style={{ fontSize: '16px', paddingTop: '0' }}>
           {children}
         </CardText>
-        <CardActions>
-          <FlatButton label='Action1' />
-          <FlatButton label='Action2' />
-        </CardActions>
+        {actions && 
+          <CardActions>
+            {actions}
+          </CardActions>}
       </Card>
     );
   }
