@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
@@ -89,9 +88,11 @@ class ServiceRequest extends Component {
       {}
     );
     this.state = {
-      fileInput: null,
+      form: {
+        fileInput: null,
+      },
     };
-    Object.assign(this.state, stringProps, checkboxProps);
+    Object.assign(this.state.form, stringProps, checkboxProps);
   }
 
   formatLabelToProperty = (label) => {
@@ -111,38 +112,40 @@ class ServiceRequest extends Component {
   handleFilePath = (event) => {
     const target = event.target;
     const files = Array.from(target.files);
-    if (files.length === 0) {
-      this.setState({
-        fileInput: null,
-      });
-    } else {
-      const fileNames = files.map(f => f.name).join(', ');
-      this.setState({
-        fileInput: fileNames,
-      });
+    let fileNames = null;
+    if (files.length > 0) {
+      fileNames = files.map(f => f.name).join(', ');
     }
+
+    const form = Object.assign({}, this.state.form);
+    form.fileInput = fileNames;
+    this.setState({ form });
   }
 
   handleFormData = () => {
     const data = new FormData();
-    for (const [key, val] of Object.entries(this.state)) data.append(key, val);
+    // eslint-disable-next-line
+    for (const [key, val] of Object.entries(this.state.form)) {
+      data.append(key, val);
+    }
+    // eslint-disable-next-line    
     for (const file of this.uploadInput.files) data.append('file', file);
 
     fetch(UPLOAD_URL, {
       method: 'post',
       body: data,
-    }).then((response) => {});
+    }).then((res) => {});
   }
 
   render() {
-    const fileValue = this.state.fileInput || 'Select a file to upload';
+    const fileValue = this.state.form.fileInput || 'Select a file to upload';
 
     const SingleLineField = (label, index) => (
       <div className='col s12 m6' key={index}>
         <TextField
           floatingLabelText={label}
           name={this.formatLabelToProperty(label)}
-          value={this.state[this.formatLabelToProperty(label)]}
+          value={this.state.form[this.formatLabelToProperty(label)]}
           onChange={this.handleInputChange}
           fullWidth
         />
@@ -166,8 +169,9 @@ class ServiceRequest extends Component {
         <Checkbox
           label={label}
           name={this.formatLabelToProperty(label)}
+          checked={this.state.form[this.formatLabelToProperty(label)]}
           key={index}
-          onClick={this.handleInputChange}
+          onCheck={this.handleInputChange}
           style={styles.checkbox}
         />
       </div>
@@ -216,12 +220,12 @@ class ServiceRequest extends Component {
           </div>
           <div className='col s12 m6'>
             {this.leftCheckboxes.map((label, index) => {
-              CheckboxField(label, index);
+              return CheckboxField(label, index);
             })}
           </div>
           <div className='col s12 m6'>
             {this.rightCheckboxes.map((label, index) => {
-              CheckboxField(label, index);
+              return CheckboxField(label, index);
             })}
           </div>
           <div className='col s12'>
@@ -236,8 +240,8 @@ class ServiceRequest extends Component {
                 label={
                   <span>
                     I have read the{' '}
-                    <Link 
-                      to='/planning-guide' 
+                    <Link
+                      to='/planning-guide'
                       target='_blank'
                       style={{ fontWeight: 500 }}
                     >
