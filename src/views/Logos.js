@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Masonry from 'react-masonry-component'
 import FlatButton from 'material-ui/FlatButton'
 import SvgIcon from 'material-ui/SvgIcon'
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
 import { GenericCard } from './../components/GenericCard'
 import '../styles/logos.scss'
 import { logos } from '../data/logoData'
@@ -12,6 +14,11 @@ class Logos extends Component {
     data: logos,
     type: 'all'
   };
+
+  handleChange = (event, index, value) => this.setState({
+    activeTab: value
+  })
+
   render () {
     const { activeTab } = this.state
     const tabs = {
@@ -74,7 +81,7 @@ class Logos extends Component {
     return (
       <div>
         <div className='row'>
-          <div className='col s12'>
+          <div className='col s12 hide-on-med-and-down'>
             <ul className='tabs'>
               {Object.keys(tabs).map(tabKey => (
                 <li className='tab' key={`${tabKey}'li'`}>
@@ -90,6 +97,17 @@ class Logos extends Component {
               ))}
             </ul>
           </div>
+          <div className='col s12 hide-on-large-only'>
+                      <SelectField
+                        floatingLabelText='Logo Type'
+                        value={this.state.activeTab}
+                        onChange={this.handleChange}
+                      >
+                        {Object.keys(tabs).map(tabKey =>
+                          <MenuItem value={tabKey} primaryText={tabs[tabKey]} />
+                        )}
+                      </SelectField>
+                    </div>
         </div>
         {/* For each tab, we generate a row */}
         {Object.keys(tabs).map(tabKey => (
