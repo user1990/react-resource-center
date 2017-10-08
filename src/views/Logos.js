@@ -15,9 +15,10 @@ class Logos extends Component {
     type: 'all'
   };
 
-  handleChange = (event, index, value) => this.setState({
-    activeTab: value
-  })
+  handleChange = (event, index, value) =>
+    this.setState({
+      activeTab: value
+    });
 
   render () {
     const { activeTab } = this.state
@@ -35,8 +36,7 @@ class Logos extends Component {
       online: 'Online',
       pilgrimages: 'Pilgrimages',
       press: 'Press',
-      seal: 'Seal',
-      yom: 'Year of Mercy'
+      seal: 'Seal'
     }
 
     const DownloadIcon = props => (
@@ -97,17 +97,21 @@ class Logos extends Component {
               ))}
             </ul>
           </div>
-          <div className='col s12 hide-on-large-only'>
-                      <SelectField
-                        floatingLabelText='Logo Type'
-                        value={this.state.activeTab}
-                        onChange={this.handleChange}
-                      >
-                        {Object.keys(tabs).map(tabKey =>
-                          <MenuItem value={tabKey} primaryText={tabs[tabKey]} />
-                        )}
-                      </SelectField>
-                    </div>
+          <div
+            className='col s12 hide-on-large-only'
+            style={{ textAlign: 'center' }}
+          >
+            <SelectField
+              floatingLabelText='Logo Type'
+              value={this.state.activeTab}
+              onChange={this.handleChange}
+              style={{ textAlign: 'left' }}
+            >
+              {Object.keys(tabs).map(tabKey => (
+                <MenuItem value={tabKey} primaryText={tabs[tabKey]} />
+              ))}
+            </SelectField>
+          </div>
         </div>
         {/* For each tab, we generate a row */}
         {Object.keys(tabs).map(tabKey => (
