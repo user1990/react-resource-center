@@ -24,7 +24,7 @@ export class GenericCard extends Component {
       children,
       classes,
     } = this.props;
-    
+
     return (
       <Card className={classes}>
         {(headerTitle || headerAvatar) &&
