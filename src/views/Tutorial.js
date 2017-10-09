@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-
-import '../styles/video.css'
+import '../styles/video.scss'
+import { Helmet } from 'react-helmet'
 
 class Tutorial extends Component {
-  constructor (props) {
+  constructor (props) {{
     super(props)
     this.state = { topCoord: null }
   }
@@ -18,6 +18,9 @@ class Tutorial extends Component {
   render () {
     return (
       <div className='container' style={{ marginBottom: 0 }}>
+      <Helmet>
+      <title>Tutorial | Resource Center</title>
+    </Helmet>
         <div className='row'>
           <div
             className='col s12 valign-wrapper'

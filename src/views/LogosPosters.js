@@ -4,7 +4,10 @@ class LogosPosters extends Component {
   render() {
     return (
       <div>
-        <h1>LogosPosters View</h1>
+        <Helmet>
+          <title>Logos & Posters | Resource Center</title>
+        </Helmet>
+        <h1>Logos & Posters View</h1>
       </div>
     );
   }
