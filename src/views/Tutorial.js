@@ -4,7 +4,7 @@ import '../styles/video.scss'
 import { Helmet } from 'react-helmet'
 
 class Tutorial extends Component {
-  constructor (props) {{
+  /* constructor (props) {{
     super(props)
     this.state = { topCoord: null }
   }
@@ -13,14 +13,14 @@ class Tutorial extends Component {
     const thisElement = ReactDOM.findDOMNode(this)
     const top = thisElement.getBoundingClientRect().top
     this.setState({ topCoord: top })
-  }
+  } */
 
   render () {
     return (
       <div className='container' style={{ marginBottom: 0 }}>
-      <Helmet>
-      <title>Tutorial | Resource Center</title>
-    </Helmet>
+        <Helmet>
+          <title>Tutorial | Resource Center</title>
+        </Helmet>
         <div className='row'>
           <div
             className='col s12 valign-wrapper'
