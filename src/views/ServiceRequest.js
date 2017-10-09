@@ -1,26 +1,27 @@
-import React, { Component } from 'react';
-import TextField from 'material-ui/TextField';
-import DatePicker from 'material-ui/DatePicker';
-import Checkbox from 'material-ui/Checkbox';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import { Link } from 'react-router-dom';
-import RaisedButton from '../components/MaterializeRaisedButton';
-import '../styles/inputFile.scss';
+import React, { Component } from 'react'
+import TextField from 'material-ui/TextField'
+import DatePicker from 'material-ui/DatePicker'
+import Checkbox from 'material-ui/Checkbox'
+import Dialog from 'material-ui/Dialog'
+import FlatButton from 'material-ui/FlatButton'
+import { Link } from 'react-router-dom'
+import RaisedButton from '../components/MaterializeRaisedButton'
+import '../styles/inputFile.css'
+import '../styles/serviceRequest.css'
 
-const PORT = process.env.SERVER_PORT || 9000;
-const HOST = process.env.UPLOADS_HOST || window.location.host.split(':')[0];
-const UPLOAD_URL = `http://${HOST}:${PORT}/uploads`;
+const PORT = process.env.SERVER_PORT || 9000
+const HOST = process.env.UPLOADS_HOST || window.location.host.split(':')[0]
+const UPLOAD_URL = `http://${HOST}:${PORT}/uploads`
 
 const styles = {
   block: {
-    maxWidth: 250,
+    maxWidth: 250
   },
   checkbox: {
-    marginBottom: 16,
+    marginBottom: 16
   },
   button: {
-    margin: 12,
+    margin: 12
   },
   exampleImageInput: {
     cursor: 'pointer',
@@ -30,19 +31,14 @@ const styles = {
     right: 0,
     left: 0,
     width: '100%',
-    opacity: 0,
-  },
-};
+    opacity: 0
+  }
+}
 
 class ServiceRequest extends Component {
-  constructor(props) {
-    super(props);
-    this.singleLineFields = [
-      'Name',
-      'Email',
-      'Phone',
-      'Department',
-    ];
+  constructor (props) {
+    super(props)
+    this.singleLineFields = ['Name', 'Email', 'Phone', 'Department']
     this.multiLineFields = [
       'Project Description',
       'Project Goal',
@@ -51,128 +47,134 @@ class ServiceRequest extends Component {
       'Primary Target Audience',
       'Secondary Target Audience',
       'Project Contact (if other than yourself)',
-      'Comments',
-    ];
+      'Comments'
+    ]
     this.leftCheckboxes = [
       'Simple1',
       'Simple2',
       'Simple3',
       'Simple4',
       'Simple5',
-      'Simple6',
-    ];
+      'Simple6'
+    ]
     this.rightCheckboxes = [
       'Simple7',
       'Simple8',
       'Simple9',
       'Simple10',
       'Simple11',
-      'Simple12',
-    ];
+      'Simple12'
+    ]
     const stringProps = [
       ...this.singleLineFields,
-      ...this.multiLineFields,
+      ...this.multiLineFields
     ].reduce(
       (acc, label) => ({
         [this.formatLabelToProperty(label)]: '',
-        ...acc,
+        ...acc
       }),
       {}
-    );
+    )
     const checkboxProps = [
       ...this.leftCheckboxes,
-      ...this.rightCheckboxes,
+      ...this.rightCheckboxes
     ].reduce(
       (acc, label) => ({
         [this.formatLabelToProperty(label)]: false,
-        ...acc,
+        ...acc
       }),
       {}
-    );
+    )
     this.state = {
       form: {
-        fileInput: null,
+        fileInput: null
       },
       loadingDialogOpen: false,
       resultDialogOpen: false,
       resultdialogText: null,
-      resultdialogSuccess: true,
-    };
-    Object.assign(this.state.form, stringProps, checkboxProps);
+      resultdialogSuccess: true
+    }
+    Object.assign(this.state.form, stringProps, checkboxProps)
   }
 
-  formatLabelToProperty = (label) => {
-    label.split(' (')[0].toLowerCase().split(' ').join('-');
-  }
+  formatLabelToProperty = label => {
+    label
+      .split(' (')[0]
+      .toLowerCase()
+      .split(' ')
+      .join('-')
+  };
 
-  handleInputChange = (event) => {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
+  handleInputChange = event => {
+    const target = event.target
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    const name = target.name
 
     this.setState({
-      [name]: value,
-    });
-  }
+      [name]: value
+    })
+  };
 
-  handleFilePath = (event) => {
-    const target = event.target;
-    const files = Array.from(target.files);
-    let fileNames = null;
+  handleFilePath = event => {
+    const target = event.target
+    const files = Array.from(target.files)
+    let fileNames = null
     if (files.length > 0) {
-      fileNames = files.map(f => f.name).join(', ');
+      fileNames = files.map(f => f.name).join(', ')
     }
 
-    const form = Object.assign({}, this.state.form);
-    form.fileInput = fileNames;
-    this.setState({ form });
-  }
+    const form = Object.assign({}, this.state.form)
+    form.fileInput = fileNames
+    this.setState({ form })
+  };
 
   handleFormData = async () => {
-    const data = new FormData();
+    const data = new FormData()
     // eslint-disable-next-line
     for (const [key, val] of Object.entries(this.state.form)) {
-      data.append(key, val);
+      data.append(key, val)
     }
-    // eslint-disable-next-line    
+    // eslint-disable-next-line
     for (const file of this.uploadInput.files) data.append('file', file);
 
-    this.setState({ loadingDialogOpen: true });
+    this.setState({ loadingDialogOpen: true })
 
     try {
       const response = await fetch(UPLOAD_URL, {
         method: 'post',
-        body: data,
-      }).then(res => res.json());
+        body: data
+      }).then(res => res.json())
 
-      if (!response.success) { throw response.status; }
+      if (!response.success) {
+        throw response.status
+      }
 
       this.setState({
         resultDialogOpen: true,
         resultdialogSuccess: true,
-        resultdialogText: 'Your service request was sent successfully.',
-      });
+        resultdialogText: 'Your service request was sent successfully.'
+      })
     } catch (err) {
       const msg =
         typeof err === 'string'
           ? err
-          : 'An error accured while sending the request.';
+          : 'An error accured while sending the request.'
       this.setState({
         resultDialogOpen: true,
         resultdialogSuccess: false,
-        resultdialogText: msg,
-      });
+        resultdialogText: msg
+      })
     }
 
-    this.setState({ loadingDialogOpen: false });
-  }
+    this.setState({ loadingDialogOpen: false })
+  };
 
   handleDialogClose = () => {
-    this.setState({ resultDialogOpen: false });
-  }
+    this.setState({ resultDialogOpen: false })
+  };
 
-  render() {
-    const fileValue = this.state.form.fileInput || 'Select a file to upload';
+  render () {
+    const fileValue = this.state.form.fileInput || 'Select a file to upload'
 
     const SingleLineField = (label, index) => (
       <div className='col s12 m6' key={index}>
@@ -184,7 +186,7 @@ class ServiceRequest extends Component {
           fullWidth
         />
       </div>
-    );
+    )
     const MultiLineField = (label, index) => (
       <div className='col s12 m6' key={index}>
         <TextField
@@ -197,7 +199,7 @@ class ServiceRequest extends Component {
           fullWidth
         />
       </div>
-    );
+    )
     const CheckboxField = (label, index) => (
       <div className='col s12 m6' key={index}>
         <Checkbox
@@ -209,7 +211,7 @@ class ServiceRequest extends Component {
           style={styles.checkbox}
         />
       </div>
-    );
+    )
     return (
       <div className='container'>
         <div className='row'>
@@ -237,8 +239,8 @@ class ServiceRequest extends Component {
                   type='file'
                   multiple
                   onChange={this.handleFilePath}
-                  ref={(input) => {
-                    this.uploadInput = input;
+                  ref={input => {
+                    this.uploadInput = input
                   }}
                 />
               </div>
@@ -254,12 +256,12 @@ class ServiceRequest extends Component {
           </div>
           <div className='col s12 m6'>
             {this.leftCheckboxes.map((label, index) => {
-              return CheckboxField(label, index);
+              return CheckboxField(label, index)
             })}
           </div>
           <div className='col s12 m6'>
             {this.rightCheckboxes.map((label, index) => {
-              return CheckboxField(label, index);
+              return CheckboxField(label, index)
             })}
           </div>
           <div className='col s12'>
@@ -301,15 +303,15 @@ class ServiceRequest extends Component {
                 label='Ok'
                 onTouchTap={this.handleDialogClose}
                 keyboardFocused
-              />,
+              />
             ]}
           >
             this.state.resultdialogText
           </Dialog>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default ServiceRequest;
+export default ServiceRequest

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Card, CardTitle, CardText } from 'material-ui/Card'
 import { GenericCard } from './../components/GenericCard'
-import '../styles/home.scss'
+import '../styles/home.css'
 
 class Home extends Component {
   constructor (props) {

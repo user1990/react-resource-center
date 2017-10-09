@@ -5,7 +5,7 @@ import SvgIcon from 'material-ui/SvgIcon'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import { GenericCard } from './../components/GenericCard'
-import '../styles/logos.scss'
+import '../styles/logos.css'
 import { logos } from '../data/logoData'
 
 class Logos extends Component {
