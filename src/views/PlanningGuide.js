@@ -76,7 +76,6 @@ class PlanningGuide extends Component {
         <PlanningGuidelines
           setHeaders={this.setHeaders}
           activeSection={this.state.activeSection}
-          headerPosition={this.state.headerPositions}
         />
         <PlanningGuidelines setHeaders={this.setHeaders} />
       </div>

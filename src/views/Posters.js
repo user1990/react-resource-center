@@ -36,7 +36,10 @@ class Posters extends Component {
           className="row flow-text"
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
-          <h2 style={{ flex: '1 100%' }}>Poster Resources</h2>
+          <div className="col s12">
+            <h2 style={{ flex: '1 100%' }}>Poster Resources</h2>
+          </div>
+
           {_.map(posterData, ({ hoverable, link, cardTitle, description, contactInfo}, key) => {
             return(
               <div key={key} className="col s12 m6 flex-div">

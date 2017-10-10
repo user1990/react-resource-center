@@ -24,3 +24,4 @@ yarn-error.log*
 /uploads
 test-upload.txt
 launch.json
+package-lock.json

@@ -35,7 +35,9 @@ class Home extends Component {
           className="row flow-text"
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
+        <div className="col s12">
           <h2 style={{ flex: '1 100%' }}>Hello! How can MarCom help you?</h2>
+        </div>
           {_.map(genericCardData, ({ title, description }, key) => {
             return (
               <div key={key} className="col s12 m4 flex-div">
