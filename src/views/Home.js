@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Helmet } from 'react-helmet';
 import { genericCardData } from '../data/genericCardData';
 import { GenericCard } from './../components/GenericCard';
-import '../styles/home.scss';
+import '../styles/home.css';
 
 class Home extends Component {
   constructor(props) {

@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router-dom';
 import RaisedButton from '../components/MaterializeRaisedButton';
 import '../styles/inputFile.css';
-import '../styles/serviceRequest.scss';
+import '../styles/serviceRequest.css';
 import { Helmet } from 'react-helmet';
 
 const PORT = process.env.SERVER_PORT || 9000;

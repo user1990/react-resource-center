@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 import throttle from 'lodash/throttle'
-import '../styles/planning-guide.scss'
+import '../styles/planning-guide.css'
 import {
   headerTitles,
   planningGuideData,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 import { posterVideos } from '../data/posterVideosData'
-import '../styles/video.scss'
+import '../styles/video.css'
 
 const PosterVideos = () => {
   return (

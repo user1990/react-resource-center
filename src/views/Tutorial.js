@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import '../styles/video.scss';
+import '../styles/video.css';
 import { Helmet } from 'react-helmet';
 
 class Tutorial extends Component {

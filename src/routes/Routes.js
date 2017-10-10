@@ -23,8 +23,8 @@ import Story from '../views/Story';
 import Tutorial from '../views//Tutorial';
 import NotFound from '../views/NotFound';
 // Styles
-import '../styles/App.scss';
-import '../styles/materialize-grid.scss';
+import '../styles/App.css';
+import '../styles/materialize-grid.css';
 
 injectTapEventPlugin();
 
