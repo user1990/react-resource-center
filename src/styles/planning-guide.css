@@ -1,0 +1,9 @@
+ul {
+  list-style: none; }
+  ul li {
+    margin-bottom: 8px;
+    padding: 8px;
+    cursor: pointer; }
+  ul li.active {
+    font-weight: 500;
+    border-left: 2px solid #ffb41f; }
