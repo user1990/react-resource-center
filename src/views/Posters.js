@@ -1,17 +1,32 @@
-/* eslint-disable */
 import React, { Component } from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
 import { GenericCard } from './../components/GenericCard';
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom'
+import { posterData } from '../data/posterData'
 
 class Posters extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      topCoord: null
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+      topCoord: document.getElementsByClassName('container')[0].offsetTop
+    })
+  }
+
   render() {
     return (
       <div
         className="container valign-wrapper"
         style={{
           marginBottom: 0,
-          minHeight: `calc(100vh - '64'}px)`
+          minHeight: `calc(100vh - ${this.state.topCoord || '64'}px)`,
+          width: '100%'
         }}
       >
         <div
@@ -19,62 +34,36 @@ class Posters extends Component {
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
           <h2 style={{ flex: '1 100%' }}>Poster Resources</h2>
-          <div className="col s12 m6 flex-div">
-            <GenericCard
-              cardTitle="Create Your Own"
-              link="https://www.canva.com/"
-              hoverable
-            >
-              Canva.com is a free graphic design tool with an easy to use
-              drag-and-drop interface and access to over a million photographs,
-              graphics, and fonts. It is used by non-designers as well as
-              professionals.
-            </GenericCard>
-          </div>
-          <div className="col s12 m6 flex-div">
-            <GenericCard
-              link="/poster-videos"
-              cardTitle="Video Tutorials"
-              hoverable
-            >
-              Canva.com is a free graphic design tool with an easy to use
-              drag-and-drop interface and access to over a million photographs,
-              graphics, and fonts. It is used by non-designers as well as
-              professionals.
-            </GenericCard>
-          </div>
-          <div className="col s12 m6 flex-div">
-            <GenericCard cardTitle="Student Design">
-              Canva.com is a free graphic design tool with an easy to use
-              drag-and-drop interface and access to over a million photographs,
-              graphics, and fonts. It is used by non-designers as well as
-              professionals.
-            </GenericCard>
-          </div>
-          <div className="col s12 m6 flex-div">
-            <GenericCard cardTitle="Professional Design">
-              Canva.com is a free graphic design tool with an easy to use
-              drag-and-drop interface and access to over a million photographs,
-              graphics, and fonts. It is used by non-designers as well as
-              professionals.
-            </GenericCard>
-          </div>
-          <div className="col s12 m6 flex-div">
-            <GenericCard cardTitle="Printing">
-              Canva.com is a free graphic design tool with an easy to use
-              drag-and-drop interface and access to over a million photographs,
-              graphics, and fonts. It is used by non-designers as well as
-              professionals.
-            </GenericCard>
-          </div>
-          <div className="col s12 m6 flex-div">
-            <GenericCard cardTitle="University Logo">
-              Canva.com is a free graphic design tool with an easy to use
-              drag-and-drop interface and access to over a million photographs,
-              graphics, and fonts. It is used by non-designers as well as
-              professionals.
-            </GenericCard>
-          </div>
+          {posterData.map((poster, key) => {
+            return(
+              <div key={key} className="col s12 m6 flex-div">
+                <GenericCard
+                  hoverable={poster.hoverable}
+                  link={poster.link}
+                  cardTitle={poster.cardTitle}
+                >
+                  {poster.description}
+                  {poster.contactInfo !== undefined
+                    ? <div style={{ marginBottom: '0' }}>
+                      <br />
+                      {poster.contactInfo.map((contact, key) => {
+                        return (
+                          <p
+                            style={{ margin: '0 10px', textAlign: 'center' }}
+                            key={key}
+                          >
+                            <Link to={contact.link}>
+                              {contact.linkText}
+                            </Link>
+                          </p>
+                        )
+                      })}
+                    </div>
+                    : null}
+                </GenericCard>
+              </div>
+            )
+          })}
         </div>
       </div>
     );
