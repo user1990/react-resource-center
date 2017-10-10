@@ -4,6 +4,7 @@ import { GenericCard } from './../components/GenericCard';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom'
 import { posterData } from '../data/posterData'
+import '../styles/posters.css'
 
 class Posters extends Component {
   constructor(props){
@@ -49,7 +50,7 @@ class Posters extends Component {
                       {poster.contactInfo.map((contact, key) => {
                         return (
                           <p
-                            style={{ margin: '0 10px', textAlign: 'center' }}
+                            style={{ margin: '0 8px' }}
                             key={key}
                           >
                             <Link to={contact.link}>
