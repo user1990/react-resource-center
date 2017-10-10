@@ -33,10 +33,14 @@ class Home extends Component {
         <div className="col s12">
           <h2 style={{ flex: '1 100%' }}>Hello! How can MarCom help you?</h2>
         </div>
-          {map(genericCardData, ({ title, description }, key) => {
+          {map(genericCardData, ({ hoverable, link, title, description }, key) => {
             return (
               <div key={key} className="col s12 m4 flex-div">
-                <GenericCard cardTitle={title}>
+                <GenericCard
+                  cardTitle={title}
+                  link={link}
+                  className={hoverable ? 'hoverable' : ''}
+                >
                   {description}
                 </GenericCard>
               </div>

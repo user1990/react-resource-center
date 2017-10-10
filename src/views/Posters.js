@@ -5,7 +5,6 @@ import { GenericCard } from './../components/GenericCard';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom'
 import posterData from '../data/posterData'
-import '../styles/posters.css'
 
 class Posters extends Component {
   state = { topCoord: null }
@@ -38,7 +37,6 @@ class Posters extends Component {
             return(
               <div key={key} className="col s12 m6 flex-div">
                 <GenericCard
-                  hoverable={hoverable}
                   link={link}
                   cardTitle={cardTitle}
                   className={hoverable ? 'hoverable' : ''}
