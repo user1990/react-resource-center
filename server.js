@@ -6,6 +6,7 @@ const helper = require('sendgrid').mail;
 require('dotenv').config();
 const sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 const fetch = require('node-fetch');
+const fieType = require('file-type');
 
 const app = express();
 const PORT = process.env.PORT || 9000;
@@ -110,6 +111,7 @@ app.post('/uploads', (req, res) => {
   //       if there was an error
 
   form.on('fileBegin', (name, file) => {
+    console.log(fileType(file))
     file.path = path.join(UPLOAD_DIR, file.name);
   });
 
