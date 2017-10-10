@@ -1,19 +1,14 @@
-import _ from 'lodash'
+import map from 'lodash/map'
 import React, { Component } from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
 import { GenericCard } from './../components/GenericCard';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom'
-import { posterData } from '../data/posterData'
+import posterData from '../data/posterData'
 import '../styles/posters.css'
 
 class Posters extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      topCoord: null
-    };
-  }
+  state = { topCoord: null }
 
   componentDidMount() {
     this.setState({
@@ -39,7 +34,7 @@ class Posters extends Component {
             <h2 style={{ flex: '1 100%' }}>Poster Resources</h2>
           </div>
 
-          {_.map(posterData, ({ hoverable, link, cardTitle, description, contactInfo}, key) => {
+          {map(posterData, ({ hoverable, link, cardTitle, description, contactInfo}, key) => {
             return(
               <div key={key} className="col s12 m6 flex-div">
                 <GenericCard
@@ -51,7 +46,7 @@ class Posters extends Component {
                   {contactInfo !== undefined
                     ? <div style={{ marginBottom: '0' }}>
                       <br />
-                      {_.map(contactInfo, ({ link, linkText }, key) => {
+                      {map(contactInfo, ({ link, linkText }, key) => {
                         return (
                           <p
                             style={{ margin: '0 8px' }}

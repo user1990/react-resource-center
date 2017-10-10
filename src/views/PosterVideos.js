@@ -1,7 +1,7 @@
-import _ from 'lodash'
+import map from 'lodash/map'
 import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
-import { posterVideos } from '../data/posterVideosData'
+import posterVideos from '../data/posterVideosData'
 import '../styles/video.css'
 
 const PosterVideos = () => {
@@ -13,7 +13,7 @@ const PosterVideos = () => {
             <title>Poster Videos | Resource Center</title>
           </Helmet>
         </div>
-        {_.map(posterVideos, ({title, url}, key) => {
+        {map(posterVideos, ({title, url}, key) => {
           return (
             <div key={key} className='col s12'>
               <div style={{ width: '100%' }}>

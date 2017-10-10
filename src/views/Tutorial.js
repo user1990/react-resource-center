@@ -4,9 +4,7 @@ import '../styles/video.css';
 import { Helmet } from 'react-helmet';
 
 class Tutorial extends Component {
-  state = {
-    topCoord: null
-  }
+  state = { topCoord: null }
 
   componentDidMount () {
     this.setState({
