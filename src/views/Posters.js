@@ -29,7 +29,6 @@ class Posters extends Component {
         style={{
           marginBottom: 0,
           minHeight: `calc(100vh - ${this.state.topCoord || '64'}px)`,
-          width: '100%'
         }}
       >
         <div
