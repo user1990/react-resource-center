@@ -1,27 +1,28 @@
-import React, { Component } from 'react'
-import { Card, CardTitle, CardText } from 'material-ui/Card'
-import { GenericCard } from './../components/GenericCard'
-import { Helmet } from 'react-helmet'
+/* eslint-disable */
+import React, { Component } from 'react';
+import { Card, CardTitle, CardText } from 'material-ui/Card';
+import { GenericCard } from './../components/GenericCard';
+import { Helmet } from 'react-helmet';
 
 class Posters extends Component {
-  render () {
+  render() {
     return (
       <div
-        className='container valign-wrapper'
+        className="container valign-wrapper"
         style={{
           marginBottom: 0,
           minHeight: `calc(100vh - '64'}px)`
         }}
       >
         <div
-          className='row flow-text'
+          className="row flow-text"
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
           <h2 style={{ flex: '1 100%' }}>Poster Resources</h2>
-          <div className='col s12 m6 flex-div'>
+          <div className="col s12 m6 flex-div">
             <GenericCard
-              cardTitle='Create Your Own'
-              link='https://www.canva.com/'
+              cardTitle="Create Your Own"
+              link="https://www.canva.com/"
               hoverable
             >
               Canva.com is a free graphic design tool with an easy to use
@@ -30,10 +31,10 @@ class Posters extends Component {
               professionals.
             </GenericCard>
           </div>
-          <div className='col s12 m6 flex-div'>
+          <div className="col s12 m6 flex-div">
             <GenericCard
-              link='/poster-videos'
-              cardTitle='Video Tutorials'
+              link="/poster-videos"
+              cardTitle="Video Tutorials"
               hoverable
             >
               Canva.com is a free graphic design tool with an easy to use
@@ -42,32 +43,32 @@ class Posters extends Component {
               professionals.
             </GenericCard>
           </div>
-          <div className='col s12 m6 flex-div'>
-            <GenericCard cardTitle='Student Design'>
+          <div className="col s12 m6 flex-div">
+            <GenericCard cardTitle="Student Design">
               Canva.com is a free graphic design tool with an easy to use
               drag-and-drop interface and access to over a million photographs,
               graphics, and fonts. It is used by non-designers as well as
               professionals.
             </GenericCard>
           </div>
-          <div className='col s12 m6 flex-div'>
-            <GenericCard cardTitle='Professional Design'>
+          <div className="col s12 m6 flex-div">
+            <GenericCard cardTitle="Professional Design">
               Canva.com is a free graphic design tool with an easy to use
               drag-and-drop interface and access to over a million photographs,
               graphics, and fonts. It is used by non-designers as well as
               professionals.
             </GenericCard>
           </div>
-          <div className='col s12 m6 flex-div'>
-            <GenericCard cardTitle='Printing'>
+          <div className="col s12 m6 flex-div">
+            <GenericCard cardTitle="Printing">
               Canva.com is a free graphic design tool with an easy to use
               drag-and-drop interface and access to over a million photographs,
               graphics, and fonts. It is used by non-designers as well as
               professionals.
             </GenericCard>
           </div>
-          <div className='col s12 m6 flex-div'>
-            <GenericCard cardTitle='University Logo'>
+          <div className="col s12 m6 flex-div">
+            <GenericCard cardTitle="University Logo">
               Canva.com is a free graphic design tool with an easy to use
               drag-and-drop interface and access to over a million photographs,
               graphics, and fonts. It is used by non-designers as well as
@@ -76,8 +77,8 @@ class Posters extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default Posters
+export default Posters;
