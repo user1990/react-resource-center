@@ -81,7 +81,8 @@ class PlanningGuide extends Component {
           <title>Planning Guide | Resource Center</title>
         </Helmet>
 
-        <PlanningGuideNav
+        <PlanningGuidelines
+          setHeaders={this.setHeaders}
           activeSection={this.state.activeSection}
           headerPosition={this.state.headerPositions}
         />

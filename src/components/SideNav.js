@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component } from 'react';
 import map from 'lodash/map';
 import { Link } from 'react-router-dom';
@@ -36,7 +37,7 @@ class SideNav extends Component {
           onRequestChange={open => this.setState({ open })}
         >
           <List>
-            {map(links, ({ isExact, linkTo, text }, key) => {
+            {_.map(links, ({ isExact, linkTo, text }, key) => {
               return (
                 <SideBarItem
                   isExact={isExact}
