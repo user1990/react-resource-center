@@ -10,18 +10,18 @@ import fusTheme from '../components/fusTheme';
 import SideNav from '../components/SideNav';
 import ScrollIntoView from '../components/ScrollIntoView';
 // Views
-import Glossary from '../views/Glossary';
-import Home from '../views/Home';
-import Letterhead from '../views/Letterhead';
-import Logos from '../views/Logos';
-import PlanningGuide from '../views/PlanningGuide';
-import Posters from '../views/Posters';
-import PosterVideos from '../views/PosterVideos';
-import ServiceRequest from '../views/ServiceRequest';
-import Services from '../views/Services';
-import Story from '../views/Story';
-import Tutorial from '../views//Tutorial';
-import NotFound from '../views/NotFound';
+import Glossary from '../views/glossary'
+import Home from '../views/Home'
+import Letterhead from '../views/letterhead'
+import Logos from '../views/Logos'
+import NotFound from '../views/notFound'
+import PlanningGuide from '../views/PlanningGuide'
+import Posters from '../views/Posters'
+import PosterVideos from '../views/posterVideos'
+import ServiceRequest from '../views/ServiceRequest'
+import Services from '../views/services'
+import Story from '../views/story'
+import Tutorial from '../views/Tutorial'
 // Styles
 import '../styles/App.css';
 import '../styles/materialize-grid.css';
