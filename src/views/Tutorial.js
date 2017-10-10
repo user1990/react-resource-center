@@ -1,26 +1,22 @@
 /* eslint-disable */
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import '../styles/video.css';
 import { Helmet } from 'react-helmet';
 
 class Tutorial extends Component {
-  /* constructor (props) {{
-    super(props)
-    this.state = {
-      topCoord: null
-    }
+  state = {
+    topCoord: null
   }
 
   componentDidMount () {
-    const thisElement = ReactDOM.findDOMNode(this)
-    const top = thisElement.getBoundingClientRect().top
-    this.setState({ topCoord: top })
-  } */
+    this.setState({
+      topCoord: this.refs.tutorialContainer.offsetTop
+    })
+  }
 
   render() {
     return (
-      <div className="container">
+      <div ref='tutorialContainer' className="container">
         <Helmet>
           <title>Tutorial | Resource Center</title>
         </Helmet>
@@ -28,7 +24,7 @@ class Tutorial extends Component {
           <div
             className="col s12 valign-wrapper"
             style={{
-              //minHeight: `calc(100vh - ${this.state.topCoord || '64'}px)`
+              minHeight: `calc(100vh - ${this.state.topCoord || '64'}px)`
             }}
           >
             <div style={{ width: '100%' }}>

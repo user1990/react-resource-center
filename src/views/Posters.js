@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component } from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
 import { GenericCard } from './../components/GenericCard';
@@ -16,13 +17,14 @@ class Posters extends Component {
 
   componentDidMount() {
     this.setState({
-      topCoord: document.getElementsByClassName('container')[0].offsetTop
+      topCoord: this.refs.pageContainer.offsetTop
     })
   }
 
   render() {
     return (
       <div
+        ref='pageContainer'
         className="container valign-wrapper"
         style={{
           marginBottom: 0,
@@ -35,26 +37,26 @@ class Posters extends Component {
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
           <h2 style={{ flex: '1 100%' }}>Poster Resources</h2>
-          {posterData.map((poster, key) => {
+          {_.map(posterData, ({ hoverable, link, cardTitle, description, contactInfo}, key) => {
             return(
               <div key={key} className="col s12 m6 flex-div">
                 <GenericCard
-                  hoverable={poster.hoverable}
-                  link={poster.link}
-                  cardTitle={poster.cardTitle}
+                  hoverable={hoverable}
+                  link={link}
+                  cardTitle={cardTitle}
                 >
-                  {poster.description}
-                  {poster.contactInfo !== undefined
+                  {description}
+                  {contactInfo !== undefined
                     ? <div style={{ marginBottom: '0' }}>
                       <br />
-                      {poster.contactInfo.map((contact, key) => {
+                      {_.map(contactInfo, ({ link, linkText }, key) => {
                         return (
                           <p
                             style={{ margin: '0 8px' }}
                             key={key}
                           >
-                            <Link to={contact.link}>
-                              {contact.linkText}
+                            <Link to={link}>
+                              {linkText}
                             </Link>
                           </p>
                         )

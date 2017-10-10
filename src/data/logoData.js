@@ -1,4 +1,3 @@
-/* eslint-disable */
 export const logos = [
   {
     name: 'Baron Primary',
@@ -243,3 +242,17 @@ export const logos = [
     psdUrl: 'FranciscanLogo/Horizontal/FULogoBW.psd',
   },
 ];
+
+export const tabs = {
+  all: 'All',
+  alumni: 'Alumni',
+  athletics: 'Athletics',
+  austrian: 'Austrian',
+  conference: 'Conference',
+  franciscan: 'Franciscan',
+  iheart: 'IHeart',
+  online: 'Online',
+  pilgrimages: 'Pilgrimages',
+  press: 'Press',
+  seal: 'Seal'
+}

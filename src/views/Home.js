@@ -1,4 +1,4 @@
-/* eslint-disable */
+import _ from 'lodash'
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Helmet } from 'react-helmet';
@@ -15,14 +15,13 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    const thisElement = ReactDOM.findDOMNode(this);
-    const top = thisElement.getBoundingClientRect().top;
-    this.setState({ topCoord: top });
+    topCoord: this.refs.homepageContainer.offsetTop
   }
 
   render() {
     return (
       <div
+        ref='homepageContainer'
         className="container valign-wrapper"
         style={{
           marginBottom: 0,
@@ -37,11 +36,11 @@ class Home extends Component {
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
           <h2 style={{ flex: '1 100%' }}>Hello! How can MarCom help you?</h2>
-          {genericCardData.map((card, key) => {
+          {_.map(genericCardData, ({ title, description }, key) => {
             return (
               <div key={key} className="col s12 m4 flex-div">
-                <GenericCard cardTitle={card.title}>
-                  {card.description}
+                <GenericCard cardTitle={title}>
+                  {description}
                 </GenericCard>
               </div>
             );
