@@ -13,7 +13,10 @@ import '../styles/serviceRequest.css'
 import { Helmet } from 'react-helmet'
 import Formsy from 'formsy-react'
 import { FormsyText, FormsyCheckbox } from 'formsy-material-ui/lib'
-import { singleLineFields, multiLineFields } from '../data/serviceRequestFields';
+import {
+  singleLineFields,
+  multiLineFields
+} from '../data/serviceRequestFields'
 
 const fileExtensions =
   'application/vnd.rar, application/pdf, application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, audio/mp4, audio/mpeg, text/plain, application/zip, video/quicktime, video/avi, audio/wav, image/jpeg, application/octet-stream, image/png'
@@ -63,11 +66,24 @@ class ServiceRequest extends Component {
       loadingDialogOpen: false,
       resultDialogOpen: false,
       resultdialogText: null,
-      resultdialogSuccess: true
+      resultdialogSuccess: true,
+      canSubmit: false
     }
     Object.assign(this.state.form, checkboxProps)
     this.handleInputChange = this.handleInputChange.bind(this)
   }
+
+  enableSubmit = e => {
+    if (e.target.checked) {
+      this.setState({
+        canSubmit: true
+      })
+    } else {
+      this.setState({
+        canSubmit: false
+      })
+    }
+  };
 
   notifyFormError = () => {
     this.setState({
@@ -262,6 +278,7 @@ class ServiceRequest extends Component {
                 id='submit-button'
                 type='submit'
                 primary
+                disabled={!this.state.canSubmit}
               />
               <div id='planning-guide-checkbox'>
                 <FormsyCheckbox
@@ -281,6 +298,7 @@ class ServiceRequest extends Component {
                   }
                   style={styles.checkbox}
                   inputStyle={{ width: '35px' }}
+                  onChange={this.enableSubmit}
                 />
               </div>
             </div>
