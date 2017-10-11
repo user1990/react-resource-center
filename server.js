@@ -92,6 +92,7 @@ app.get('/*', (req, res) => {
 
 app.post('/uploads', (req, res) => {
   const form = new formidable.IncomingForm();
+  form.maxFileSize = 2
 
   // In any case send the cors headers (even on error)
   res.header('AccessControlAllowOrigin', CORS);
@@ -111,8 +112,14 @@ app.post('/uploads', (req, res) => {
   //       if there was an error
 
   form.on('fileBegin', (name, file) => {
-    console.log(fileType(file))
-    file.path = path.join(UPLOAD_DIR, file.name);
+    // https://stackoverflow.com/a/30550190/4718107
+    const fileType = file.type.split('/').pop()
+
+    if (fileType === 'jpg' || fileType === 'png' || fileType === 'plain') {
+      file.path = path.join(UPLOAD_DIR, file.name)
+    } else {
+      console.log(`incorrect file type: ${fileType}`)
+    }
   });
 
   form.on('file', (name, file) => {
