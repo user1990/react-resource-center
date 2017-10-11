@@ -1,20 +1,19 @@
-import _ from 'lodash'
-import React, { Component } from 'react';
-import map from 'lodash/map';
-import { Link } from 'react-router-dom';
-import { List } from 'material-ui/List';
-import Drawer from 'material-ui/Drawer';
-import AppBar from 'material-ui/AppBar';
-import SideBarItem from './SideBarItem';
-import fusLogo from '../img/fus-logo.svg';
-import links from '../data/linksData';
+import map from 'lodash/map'
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { List } from 'material-ui/List'
+import Drawer from 'material-ui/Drawer'
+import AppBar from 'material-ui/AppBar'
+import SideBarItem from './SideBarItem'
+import fusLogo from '../img/fus-logo.svg'
+import links from '../data/linksData'
 
 class SideNav extends Component {
-  state = { open: false }
+  state = { open: false };
 
-  handleClose = () => this.setState({ open: false })
+  handleClose = () => this.setState({ open: false });
 
-  render() {
+  render () {
     return (
       <div>
         <AppBar
@@ -37,7 +36,7 @@ class SideNav extends Component {
           onRequestChange={open => this.setState({ open })}
         >
           <List>
-            {_.map(links, ({ isExact, linkTo, text }, key) => {
+            {map(links, ({ isExact, linkTo, text }, key) => {
               return (
                 <SideBarItem
                   isExact={isExact}
@@ -46,13 +45,13 @@ class SideNav extends Component {
                   onClick={this.handleClose}
                   key={key}
                 />
-              );
+              )
             })}
           </List>
         </Drawer>
       </div>
-    );
+    )
   }
 }
 
-export default SideNav;
+export default SideNav
