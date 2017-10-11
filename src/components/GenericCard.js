@@ -18,18 +18,15 @@ export class GenericCard extends Component {
       cardSubtitle,
       cardTitle,
       children,
-      classes,
       headerAvatar,
       headerSubtitle,
       headerTitle,
-      hoverable,
       mediaImgAlt,
       mediaImgSrc,
-      overlay,
-      zDepth
+      overlay
     }) =>
       <Card
-        className={`${classes} card z-depth-1`}
+        className={`${className} card z-depth-1`}
         style={{ boxShadow: 'none' }}>
           {(headerTitle || headerAvatar) && (
             <CardHeader
