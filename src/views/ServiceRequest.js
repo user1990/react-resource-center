@@ -15,6 +15,8 @@ import Formsy from 'formsy-react'
 import { FormsyText, FormsyCheckbox } from 'formsy-material-ui/lib'
 import { singleLineFields, multiLineFields } from '../data/serviceRequestFields';
 
+const fileExtensions =
+  'application/vnd.rar, application/pdf, application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, audio/mp4, audio/mpeg, text/plain, application/zip, video/quicktime, video/avi, audio/wav, image/jpeg, application/octet-stream, image/png'
 const PORT = process.env.SERVER_PORT || 9000
 const HOST = process.env.UPLOADS_HOST || window.location.host.split(':')[0]
 const UPLOAD_URL = `http://${HOST}:${PORT}/uploads`
@@ -224,6 +226,7 @@ class ServiceRequest extends Component {
                     name='upload[]'
                     type='file'
                     multiple
+                    accept={fileExtensions}
                     onChange={this.handleFilePath}
                     ref={input => {
                       this.uploadInput = input
