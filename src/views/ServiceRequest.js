@@ -1,7 +1,6 @@
 // eslint-disable-next-line
 /* global notifyFormError */
 import React, { Component } from 'react'
-import TextField from 'material-ui/TextField'
 import DatePicker from 'material-ui/DatePicker'
 import Checkbox from 'material-ui/Checkbox'
 import Dialog from 'material-ui/Dialog'
@@ -50,7 +49,8 @@ class ServiceRequest extends Component {
     )
     this.state = {
       form: {
-        fileInput: null
+        fileInput: null,
+        fileValid: true
       },
       loadingDialogOpen: false,
       resultDialogOpen: false,
@@ -104,8 +104,15 @@ class ServiceRequest extends Component {
     const target = event.target
     const files = Array.from(target.files)
     let fileNames = null
+    this.setState({ formSate })
     if (files.length > 0) {
       fileNames = files.map(f => f.name).join(', ')
+      files.map(
+        f =>
+          fileExtensions.match(f.type) === null
+           ? (formSate.fileValid = false)
+           : ''
+      )
     }
 
     const form = Object.assign({}, this.state.form)
@@ -198,6 +205,7 @@ class ServiceRequest extends Component {
                   value={this.state.form[field.name]}
                   onChange={this.handleInputChange}
                   fullWidth
+                  multiline
                   id={`${field.name.toLowerCase()}-field`}
                   required={field.required}
                   validations={field.type}
@@ -225,14 +233,19 @@ class ServiceRequest extends Component {
                   />
                 </div>
                 <div className='file-path-wrapper'>
-                  <TextField
+                  <FormsyText
                     className='file-path validate'
                     value={fileValue}
                     multiline
                     rows={1}
                     fullWidth
                     readOnly
+                    name='upload-text-field'
                     id='fiel-path-field'
+                    validation={{
+                      myCustomFiveValidation: () => this.state.form.fileValid
+                    }}
+                    validationError='Error'
                   />
                 </div>
               </div>
