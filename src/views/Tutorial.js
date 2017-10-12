@@ -1,20 +1,20 @@
 /* eslint-disable */
 import React, { Component } from 'react';
-import '../styles/video.css';
 import { Helmet } from 'react-helmet';
+import '../styles/video.css';
 
 class Tutorial extends Component {
-  state = { topCoord: null }
+  state = { topCoord: null };
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({
       topCoord: this.refs.tutorialContainer.offsetTop
-    })
+    });
   }
 
   render() {
     return (
-      <div ref='tutorialContainer' className="container">
+      <div ref="tutorialContainer" className="container">
         <Helmet>
           <title>Tutorial | Resource Center</title>
         </Helmet>

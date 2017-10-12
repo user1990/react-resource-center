@@ -4,7 +4,7 @@ import { withRouter } from 'react-router'
 class ScrollIntoView extends Component {
   componentDidUpdate (prevProps) {
     if (this.props.location.pathname !== prevProps.location.pathname) {
-      this.component.ScrollIntoView()
+      this.component.scrollIntoView()
     }
   }
 
