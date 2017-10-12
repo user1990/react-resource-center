@@ -104,13 +104,15 @@ class ServiceRequest extends Component {
     const target = event.target
     const files = Array.from(target.files)
     let fileNames = null
-    this.setState({ formSate })
+    const formState = this.state.form
+    formState.fileValid = true
+    this.setState({ formState })
     if (files.length > 0) {
       fileNames = files.map(f => f.name).join(', ')
       files.map(
         f =>
           fileExtensions.match(f.type) === null
-           ? (formSate.fileValid = false)
+           ? (formState.fileValid = false)
            : ''
       )
     }
@@ -158,11 +160,15 @@ class ServiceRequest extends Component {
     }
 
     this.setState({ loadingDialogOpen: false })
-  };
+  }
+
+  alertHi = () => {
+    alert('Hi from the info button')
+  }
 
   handleDialogClose = () => {
     this.setState({ resultDialogOpen: false })
-  };
+  }
 
   render () {
     const fileValue = this.state.form.fileInput || 'Select a file to upload'
@@ -255,14 +261,17 @@ class ServiceRequest extends Component {
                 <IconCheckbox
                   label={label.name}
                   name={label.name.toLowerCase()}
-                  checked={this.state.form[label.name.toLowerCase()]}
+                  isChecked={this.state.form[label.name.toLowerCase()]}
                   key={index + label.name}
-                  handleCheck={this.handleInputChange}
+                  handleCheck={e => this.handleInputChange(e)}
                   style={styles.checkbox}
                   inputStyle={styles.inputStyle}
                   clickHandler={this.alertHi}
                   src={infoLogo}
                   alt='Info Button'
+                  icon={label.icon ? label.icon : false}
+                  dialogText={label.dialogText && label.dialogText}
+                  dialogTitle={label.dialogTitle && label.dialogTitle}
                 />
               })}
             </div>

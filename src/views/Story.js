@@ -6,19 +6,22 @@ import { Helmet } from 'react-helmet'
 import RaisedButton from '../components/MaterializeRaisedButton'
 import '../styles/serviceRequest.css'
 
-const PORT = process.env.SERVER_PORT || 9000
+const PORT = process.env.UPLOADS_PORT || 9000
 const HOST = process.env.UPLOADS_HOST || window.location.host.split(':')[0]
-const UPLOAD_URL = `http://${HOST}:${PORT}/uploads`
+const UPLOAD_URL =
+  process.env.NODE_ENV === 'production'
+    ? `https://${HOST}/story-form`
+    : `http://${HOST}:${PORT}/story-form`
 
 class Story extends Component {
- constructor (props) {
+  constructor (props) {
     super(props)
-    this.singleLineFields = ['Name', 'email']
-    this.multiLineFields = ['Project Description']
+    this.singleLineFields = ['Name', 'Email']
+    this.multiLineFields = ['Story']
 
     const stringProps = [
-      ...singleLineFields,
-      ...multiLineFields
+      ...this.singleLineFields,
+      ...this.multiLineFields
     ].reduce(
       (acc, label) => ({
         [this.formatLabelToProperty(label)]: '',
@@ -31,8 +34,8 @@ class Story extends Component {
       form: {},
       loadingDialogOpen: false,
       resultDialogOpen: false,
-      resultdialogText: null,
-      resultdialogSuccess: true
+      resultDialogText: null,
+      resultDialogSuccess: true
     }
     Object.assign(this.state.form, stringProps)
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -43,7 +46,7 @@ class Story extends Component {
       .split(' (')[0]
       .toLowerCase()
       .split(' ')
-      .join('-');
+      .join('-')
 
   handleInputChange (event) {
     const target = event.target
@@ -55,19 +58,6 @@ class Story extends Component {
 
     this.setState({ form })
   }
-
-  handleFilePath = event => {
-    const target = event.target
-    const files = Array.from(target.files)
-    let fileNames = null
-    if (files.length > 0) {
-      fileNames = files.map(f => f.name).join(', ')
-    }
-
-    const form = Object.assign({}, this.state.form)
-    form.fileInput = fileNames
-    this.setState({ form })
-  };
 
   handleFormData = async () => {
     const data = new FormData()
@@ -83,33 +73,31 @@ class Story extends Component {
         body: data
       }).then(res => res.json())
 
-      if (!response.success) {
-        throw response.status
-      }
+      if (!response.success) throw response.status
 
       this.setState({
         resultDialogOpen: true,
-        resultdialogSuccess: true,
-        resultdialogText: 'Your Story suggestions was sent successfully.'
+        resultDialogSuccess: true,
+        resultDialogText: 'Your story suggestion was sent successfully.'
       })
     } catch (err) {
       const msg =
         typeof err === 'string'
           ? err
-          : 'An error accured while sending your story.'
+          : 'An error occurred while sending your story.'
       this.setState({
         resultDialogOpen: true,
-        resultdialogSuccess: false,
-        resultdialogText: msg
+        resultDialogSuccess: false,
+        resultDialogText: msg
       })
     }
 
     this.setState({ loadingDialogOpen: false })
-  };
+  }
 
   handleDialogClose = () => {
     this.setState({ resultDialogOpen: false })
-  };
+  }
 
   render () {
     const SingleLineField = (label, index) => (
@@ -125,26 +113,30 @@ class Story extends Component {
       </div>
     )
     const MultiLineField = (label, index) => (
-      <div className='col s12 m6' key={index}>
+      <div className='col s12' key={index}>
         <TextField
           floatingLabelText={label}
           name={this.formatLabelToProperty(label)}
           value={this.state.form[this.formatLabelToProperty(label)]}
           onChange={this.handleInputChange}
-          fullWidth
-          multiline
+          multiLine
           rows={2}
+          fullWidth
           id={`${this.formatLabelToProperty(label)}-field`}
         />
       </div>
     )
+
     return (
       <div className='container'>
         <Helmet>
           <title>Story | Resource Center</title>
         </Helmet>
-        <div className='row'>
-          <div className='col s12 flow-text'>
+        <div className='row flow-text'>
+          <div className='col s12'>
+            <h2 style={{ marginBottom: 0 }}>Suggest a Story</h2>
+          </div>
+          <div className='col s12'>
             <p>
               The Marketing and Communications Department shares the
               accomplishments of Franciscan University faculty, students, staff,
