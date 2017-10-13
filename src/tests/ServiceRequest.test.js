@@ -1,7 +1,7 @@
 /* eslint-env jest */
+import { visit } from './testUtils'
 import fs from 'fs'
 import path from 'path'
-import { visit } from './testUtils'
 
 describe('Service Request Page', () => {
   it('loads on /service-request-form', async () => {
@@ -18,7 +18,7 @@ describe('Service Request Page', () => {
     expect(text).toContain('Please use this form to request services')
   })
 
-  it('contains a bunch(10) of input fields', async () => {
+  it('contains a bunch(10+) of input fields', async () => {
     const page = visit('/service-request-form')
     const inputFieldCount = await page
       .evaluate(() => document.getElementsByTagName('input').length)
@@ -53,8 +53,7 @@ describe('Service Request Page', () => {
   it('allows to upload files and shows the filenames', async () => {
     const page = visit('/service-request-form')
     const fileInputSelector = '.file-upload input[type="file"]'
-    const filenamesSelector =
-      '.file-upload .file-path-wrapper > input[type="text"]'
+    const filenamesSelector = '.file-upload .file-path-wrapper textarea'
     const text = await page
       .upload(fileInputSelector, ['fake file 1.txt', 'fake file 2.txt'])
       .evaluate(sel => document.querySelector(sel).value, filenamesSelector)
@@ -76,7 +75,11 @@ describe('Service Request Page', () => {
     const page = visit('/service-request-form')
     const fileInputSelector = '.file-upload input[type="file"]'
     await page
+      .insert('input[name="name"]', 'abc')
+      .insert('input[name="email"]', 'test@test.com')
+      .insert('textarea[name="project description"]', 'abc')
       .upload(fileInputSelector, tempfile)
+      .click('#planning-guide-checkbox input')
       .click('#submit-button')
       .wait(1000)
       .end()
