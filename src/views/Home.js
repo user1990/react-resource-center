@@ -1,10 +1,10 @@
 import map from 'lodash/map'
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { Helmet } from 'react-helmet';
-import genericCardData from '../data/genericCardData';
-import { GenericCard } from './../components/GenericCard';
-import '../styles/home.css';
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
+import { Helmet } from 'react-helmet'
+import genericCardData from '../data/genericCardData'
+import { GenericCard } from './../components/GenericCard'
+import '../styles/home.css'
 
 class Home extends Component {
   state = { topCoord: null }
@@ -17,7 +17,7 @@ class Home extends Component {
     return (
       <div
         ref='homepageContainer'
-        className="container valign-wrapper"
+        className='container'
         style={{
           marginBottom: 0,
           minHeight: `calc(100vh - ${this.state.topCoord || '64'}px)`
@@ -27,24 +27,28 @@ class Home extends Component {
           <title>Home | Resource Center</title>
         </Helmet>
         <div
-          className="row flow-text"
+          className='row flow-text'
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
-        <div className="col s12">
+        <div className='col s12'>
           <h2 style={{ flex: '1 100%' }}>Hello! How can MarCom help you?</h2>
         </div>
-          {map(genericCardData, ({ hoverable, link, title, description }, key) => {
-            return (
-              <div key={key} className="col s12 m4 flex-div">
-                <GenericCard
-                  cardTitle={title}
-                  link={link}
-                  className={hoverable ? 'hoverable' : ''}
+          {map(genericCardData,
+            ({ hoverable, link, title, description }, key) => {
+              return (
+                <div
+                  key={key}
+                  className='col s12 m4 flex-div'
                 >
-                  {description}
-                </GenericCard>
-              </div>
-            );
+                  <GenericCard
+                    cardTitle={title}
+                    link={link}
+                    className={hoverable ? 'hoverable' : ''}
+                  >
+                    {description}
+                  </GenericCard>
+                </div>
+              )
           })}
         </div>
       </div>
@@ -52,4 +56,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Home
