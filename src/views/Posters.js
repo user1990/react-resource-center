@@ -19,31 +19,31 @@ class Posters extends Component {
     return (
       <div
         ref='pageContainer'
-        className="container valign-wrapper"
+        className='container'
         style={{
           marginBottom: 0,
           minHeight: `calc(100vh - ${this.state.topCoord || '64'}px)`,
         }}
       >
         <div
-          className="row flow-text"
+          className='row flow-text'
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
-          <div className="col s12">
+          <div className='col s12'>
             <h2 style={{ flex: '1 100%' }}>Poster Resources</h2>
           </div>
 
           {map(posterData, ({ hoverable, link, cardTitle, description, contactInfo}, key) => {
             return(
-              <div key={key} className="col s12 m6 flex-div">
+              <div key={key} className='col s12 m6 flex-div'>
                 <GenericCard
                   link={link}
                   cardTitle={cardTitle}
                   className={hoverable ? 'hoverable' : ''}
                 >
                   {description}
-                  {contactInfo !== undefined
-                    ? <div style={{ marginBottom: '0' }}>
+                  {contactInfo !== undefined ? (
+                    <div style={{ marginBottom: '0' }}>
                       <br />
                       {map(contactInfo, ({ link, linkText }, key) => {
                         return (
@@ -51,14 +51,12 @@ class Posters extends Component {
                             style={{ margin: '0 8px' }}
                             key={key}
                           >
-                            <Link to={link}>
-                              {linkText}
-                            </Link>
+                            <Link to={link}>{linkText}</Link>
                           </p>
                         )
                       })}
                     </div>
-                    : null}
+                    ) : null}
                 </GenericCard>
               </div>
             )

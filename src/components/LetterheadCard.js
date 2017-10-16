@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardTitle, CardActions, CardMedia } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 
-const LetterheadCard = ({ image, title, action }) => {
+const LetterheadCard = ({ image, title, url, actionText }) => {
   return (
     <div
       className='col s12 m6 letterhead-card'
@@ -15,7 +15,7 @@ const LetterheadCard = ({ image, title, action }) => {
 
         <CardTitle title={title} />
         <CardActions>
-          <FlatButton label={action} />
+          <FlatButton label={actionText} href={url} />
         </CardActions>
       </Card>
     </div>

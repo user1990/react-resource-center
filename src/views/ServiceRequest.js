@@ -2,7 +2,6 @@
 /* global notifyFormError */
 import React, { Component } from 'react'
 import DatePicker from 'material-ui/DatePicker'
-import Checkbox from 'material-ui/Checkbox'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import { Link } from 'react-router-dom'
@@ -77,7 +76,7 @@ class ServiceRequest extends Component {
         canSubmit: false
       })
     }
-  };
+  }
 
   notifyFormError = () => {
     this.setState({
@@ -85,14 +84,14 @@ class ServiceRequest extends Component {
       resultdialogSuccess: false,
       resultdialogText: 'Something went wrong. Check for errors and try again.'
     })
-  };
+  }
 
   formatLabelToProperty = label =>
     label
       .split(' (')[0]
       .toLowerCase()
       .split(' ')
-      .join('-');
+      .join('-')
 
   handleInputChange (event) {
     const target = event.target
@@ -117,15 +116,15 @@ class ServiceRequest extends Component {
       files.map(
         f =>
           fileExtensions.match(f.type) === null
-           ? (formState.fileValid = false)
-           : ''
+            ? (formState.fileValid = false)
+            : ''
       )
     }
 
     const form = Object.assign({}, this.state.form)
     form.fileInput = fileNames
     this.setState({ form })
-  };
+  }
 
   handleFormData = async () => {
     const data = new FormData()
@@ -205,6 +204,7 @@ class ServiceRequest extends Component {
                   required={field.required}
                   validations={field.type}
                   validationError={field.error}
+                  className='formsy-input'
                 />
               </div>
             ))}
@@ -221,6 +221,7 @@ class ServiceRequest extends Component {
                   required={field.required}
                   validations={field.type}
                   validationError={field.error}
+                  className='formsy-multiline'
                 />
               </div>
             ))}
@@ -241,11 +242,12 @@ class ServiceRequest extends Component {
                     ref={input => {
                       this.uploadInput = input
                     }}
+                    className='formsy-input'
                   />
                 </div>
                 <div className='file-path-wrapper'>
                   <FormsyText
-                    className='file-path validate'
+                    className='file-path validate formsy-multiline'
                     value={fileValue}
                     multiline
                     rows={1}
@@ -282,28 +284,21 @@ class ServiceRequest extends Component {
             </div>
             <div className='col s12 m6'>
               {rightCheckboxes.map((label, index) => (
-                <div key={index + label.name}>
-                  <Checkbox
-                    label={label.name}
-                    name={label.name.toLowerCase()}
-                    checked={this.state.form[label.name.toLowerCase()]}
-                    key={index}
-                    onCheck={this.handleInputChange}
-                    style={styles.checkbox}
-                    inputStyle={styles.inputStyle}
-                />
-                <img
-                  onClick={this.alertHi}
-                  style={{
-                    position: 'relative',
-                    top: -40,
-                    right: -200,
-                    zIndex: 2
-                  }}
+                <IconCheckbox
+                  label={label.name}
+                  name={label.name.toLowerCase()}
+                  isChecked={this.state.form[label.name.toLowerCase()]}
+                  key={index + label.name}
+                  handleCheck={e => this.handleInputChange(e)}
+                  style={styles.checkbox}
+                  inputStyle={styles.inputStyle}
+                  clickHandler={this.alertHi}
                   src={infoLogo}
                   alt='Info Button'
+                  icon={label.icon ? label.icon : false}
+                  dialogText={label.dialogText && label.dialogText}
+                  dialogTitle={label.dialogTitle && label.dialogTitle}
                 />
-              </div>
               ))}
             </div>
             <div className='col s12'>

@@ -24,13 +24,13 @@ class IconCheckbox extends Component {
           inputStyle={this.props.inputStyle}
         />
         {this.props.icon && (
-          <div>
+          <div style={{ position: 'relative' }}>
             <img
               onClick={this.handleDialogOpen}
               style={{
-                position: 'relative',
-                top: -40,
-                right: -200,
+                position: 'absolute',
+                top: '-40px',
+                right: '200px',
                 zIndex: 2
               }}
               src={this.props.src}
@@ -41,6 +41,7 @@ class IconCheckbox extends Component {
               modal={false}
               open={this.state.DialogOpen}
               onRequestClose={this.handleDialogClose}
+              autoScrollBodyContent
               action={[
                 <FlatButton
                   label='Ok'
