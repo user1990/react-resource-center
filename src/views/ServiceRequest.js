@@ -28,7 +28,7 @@ const PORT = process.env.UPLOADS_PORT || 9000
 const HOST = process.env.UPLOADS_HOST || window.location.host.split(':')[0]
 const UPLOAD_URL =
   process.env.NODE_ENV === 'production'
-    ? `${PROTOCOL}://${HOSTNAME}`
+    ? `${PROTOCOL}://${HOST}/uploads`
     : `http://${HOST}:${PORT}/uploads`
 
 const styles = {
