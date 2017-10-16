@@ -32,7 +32,9 @@ const UPLOAD_URL =
 
 const styles = {
   checkbox: {
-    marginBottom: 16
+    marginBottom: 16,
+    width: 'auto',
+    display: 'flex'
   }
 }
 
@@ -228,7 +230,7 @@ class ServiceRequest extends Component {
               <DatePicker hintText='Desired Completion Date' />
             </div>
             <div className='col s12 m6'>
-              <div className='file-field input-field'>
+              <label for='upload' className='file-field input-field'>
                 <div className='btn'>
                   <span>Upload Files</span>
                   <input
@@ -260,9 +262,9 @@ class ServiceRequest extends Component {
                     validationError='Error'
                   />
                 </div>
-              </div>
+              </label>
             </div>
-            <div className='col s12 m6'>
+            <div className='col s12 m6 checkbox-col'>
               {leftCheckboxes.map((label, index) => {
                 <IconCheckbox
                   label={label.name}
@@ -281,7 +283,7 @@ class ServiceRequest extends Component {
                 />
               })}
             </div>
-            <div className='col s12 m6'>
+            <div className='col s12 m6 checkbox-col'>
               {rightCheckboxes.map((label, index) => (
                 <IconCheckbox
                   label={label.name}
