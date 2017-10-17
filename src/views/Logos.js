@@ -6,12 +6,17 @@ import MasonryComp from '../components/MasonryComp'
 import { Helmet } from 'react-helmet'
 import { logos, tabs } from '../data/logoData.js'
 import '../styles/logos.css'
+import { logPageView } from '../utils/analytics'
 
 class Logos extends Component {
   state = {
     activeTab: 'all',
     data: logos,
     type: 'all'
+  }
+
+  componentDidMount() {
+    logPageView()
   }
 
   handleChange = (event, index, value) =>

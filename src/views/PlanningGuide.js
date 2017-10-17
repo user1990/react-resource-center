@@ -7,6 +7,7 @@ import throttle from 'lodash/throttle'
 import PlanningGuideNav from '../components/PlanningGuideNav'
 import PlanningGuidelines from '../components/PlanningGuidelines'
 import '../styles/planning-guide.css'
+import { logPageView } from '../utils/analytics'
 
 const spliceHeaders = header => {
   let headersPositions = []
@@ -28,10 +29,8 @@ class PlanningGuide extends Component {
   }
 
   componentDidMount () {
-    this.setState({
-      headerPositions: spliceHeaders([...document.getElementsByTagName('h3')])
-    })
     window.addEventListener('scroll', this.handleScroll)
+    logPageView()
   }
 
   componentWillUnmount () {
