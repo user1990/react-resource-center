@@ -1,7 +1,7 @@
 import map from 'lodash/map'
 import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
-import LetterheadCard from '../components/letterheadCard'
+import LetterheadCard from '../components/LetterheadCard'
 import letterheadData from '../data/letterheadData'
 import { logPageView } from '../utils/analytics'
 
@@ -9,7 +9,7 @@ class Letterhead extends Component {
   componentDidMount = () => {
     logPageView()
   }
-  
+
   render () {
     return (
       <div className='container'>
