@@ -1,8 +1,21 @@
 .file-field {
-  margin-bottom: 16px; }
+  margin-bottom: 16px;
+  display: block;
+  cursor: pointer; }
+  .file-field input {
+    z-index: -1; }
 
-.file-path-wrapper textarea {
-  margin-top: 0 !important; }
+.file-path-wrapper {
+  pointer-events: none; }
+  .file-path-wrapper textarea {
+    margin-top: 0 !important; }
+
+.checkbox-col {
+  display: flex;
+  flex-direction: column; }
 
 #planning-guide-checkbox {
   padding-top: 15px; }
+
+textarea:invalid {
+  box-shadow: none; }

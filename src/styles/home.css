@@ -10,3 +10,11 @@
   border-left: solid 4px #ffb41f; }
   .home-card-container .hoverable:hover {
     border-left: solid 4px #21412a; }
+
+.formsy-input > div:nth-of-type(2) {
+  position: absolute !important;
+  bottom: -8px !important; }
+
+.formsy-multiline > div:nth-of-type(3) {
+  position: absolute !important;
+  bottom: -8px !important; }
