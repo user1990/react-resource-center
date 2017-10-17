@@ -3,14 +3,14 @@ const express = require('express')
 const path = require('path')
 const fs = require('fs')
 const formidable = require('formidable')
-const helper = require('sendgrid').mail
-const sg = require('sendgrid')(process.env.SENDGRID_API_KEY)
-const fetch = require('node-fetch')
-const fileType = require('file-type')
-
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const app = express()
-const PORT = process.env.PORT || 9000
-// const CLIENT_PORT = process.env.PORT || 3000;
+const fetch = require('node-fetch')
+const xssFilters = require('xss-filters')
+
+const PORT = process.env.SERVER_PORT || 9000
+// const CLIENT_PORT = process.env.PORT || 3000
 const PROTOCOL = process.env.PROTOCOL || 'http'
 const HOSTNAME = process.env.HOST || 'localhost'
 const UPLOAD_DIR = path.join(__dirname, 'uploads/')
@@ -19,6 +19,7 @@ const CORS =
 const ENABLE_SEND_EMAILS =
   process.env.NODE_ENV === 'production' ||
   process.env.ENABLE_SEND_EMAILS === 'true'
+
 const ENABLE_WRIKE =
   process.env.NODE_ENV === 'production' || process.env.ENABLE_WRIKE === 'true'
 
@@ -39,7 +40,7 @@ const queryParams = obj =>
   Object.keys(obj)
     .map(key => [key, obj[key]]) // There is no Object.entries() in node 6
     .map(
-      ([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`
+      ([key, val]) => encodeURIComponent(key) + '=' + encodeURIComponent(val)
     )
     .join('&')
 
@@ -54,68 +55,136 @@ const wrikeMkFolder = (name, content) =>
     method: 'post',
     headers: {
       Authorization: `bearer ${process.env.WRIKE_TOKEN}`,
-      ContentType: 'application/xwwwformurlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   }).then(res => res.json())
 
-const wrikeAddAttachments = (id, file, name, type) =>
+const wrikeAddAttachment = (id, file, name, type) =>
   fetch(`https://www.wrike.com/api/v3/folders/${id}/attachments`, {
     body: file,
     method: 'post',
     headers: {
       Authorization: `bearer ${process.env.WRIKE_TOKEN}`,
-      xrequestedwith: 'XMLHttpRequest',
-      xfilename: name,
-      contenttype: type,
-      cachecontrol: 'nocache'
+      'x-requested-with': 'XMLHttpRequest',
+      'x-file-name': name,
+      'content-type': type,
+      'cache-control': 'no-cache'
     }
   }).then(res => res.json())
 
-const makeSgRequest = body =>
-  sg.emptyRequest({
-    method: 'POST',
-    path: '/v3/mail/send',
-    body: body.toJSON()
-  })
-
 if (!fs.existsSync(UPLOAD_DIR)) {
-  console.warn('==========================')
   console.warn('Creating uploads folder...')
-  console.warn('==========================')
   fs.mkdirSync(UPLOAD_DIR)
 }
-console.info('======================================')
 console.info(`Uploads will be saved in ${UPLOAD_DIR}`)
-console.info('======================================')
 
 app.use(express.static(path.join(__dirname, 'build')))
 
-app.get('/*', (req, res) => {
+app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'))
 })
 
-app.post('/uploads', (req, res) => {
+// Handle Story form submissions
+app.post('/story-form', function (req, res) {
+  const form = new formidable.IncomingForm()
+  // In any case send the cors headers (even on error)
+  res.header('Access-Control-Allow-Origin', CORS)
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
+
+  form.parse(req)
+
+  const fields = {}
+  let fieldsString = ''
+  form.on('field', (name, value) => {
+    fields[name] = value
+    fieldsString =
+      fieldsString +
+      `<span><span style='text-transform: capitalize;'>${xssFilters.inHTMLData(
+        name
+      )}</span>: ${xssFilters.inHTMLData(value)}</span><br /><br />`
+  })
+
+  // Handle a possible error while parsing the request
+  // We need a variable in this scope to hold whether there was an error
+  // because we need to know that in a different callback
+  let error = false
+  form.on('error', err => {
+    error = true
+    console.log('Error while parsing request to /story-form: ' + err)
+    res
+      .status(400) // Bad request
+      .json({ success: false, status: 'Error parsing the request' })
+  })
+
+  form.on('end', () => {
+    // The end event is fired even if an error occurs, so we
+    // need to prevent from sending a second response, otherwise the
+    // server crashes
+    if (error) return
+    console.log('Received fields:\n' + JSON.stringify(fields, null, 2))
+    console.log(fieldsString)
+
+    const emailBody = `Thank you for your submission!<br /><br />${fieldsString}`
+
+    // Here is a good place to send the emails since we have the fields
+    // We don't want to actually send emails during testing since it
+    // would send a test email on every single commit
+    if (ENABLE_SEND_EMAILS) {
+      const msg = {
+        to: fields.email,
+        bcc:
+          process.env.NODE_ENV === 'production'
+            ? [
+              'jweigel@franciscan.edu',
+              process.env.STORY_EMAIL1,
+              process.env.STORY_EMAIL2
+            ]
+            : 'jweigel@franciscan.edu',
+        from: 'resourcecenter@franciscan.edu',
+        replyTo: 'jweigel@franciscan.edu',
+        subject: 'Suggest a Story Form Submission',
+        text: 'Story suggestion submitted successfully!',
+        html: emailBody
+      }
+      sgMail
+        .send(msg)
+        .then(() => console.log('Mail sent successfully'))
+        .catch(error => console.error(error.toString()))
+    }
+
+    // Send the success response
+    res
+      .status(200)
+      .json({ success: true, status: 'Form successfully submitted' })
+  })
+})
+
+// Handle Service Request Form Submissions
+app.post('/uploads', function (req, res) {
   const form = new formidable.IncomingForm()
   form.maxFileSize = 2
 
   // In any case send the cors headers (even on error)
-  res.header('AccessControlAllowOrigin', CORS)
+  res.header('Access-Control-Allow-Origin', CORS)
   res.header(
-    'AccessControlAllowHeaders',
-    'Origin, XRequestedWith, ContentType, Accept'
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
   )
 
   form.parse(req)
 
   // The events we subscribe to in the form occur in the following order
-  // field  multiple times
-  // fileBegin then file  once per file
-  // error  only if there was a parsing error
-  // end  when all other events have been handled and the files have
+  // field - multiple times
+  // fileBegin then file - once per file
+  // error - only if there was a parsing error
+  // end - when all other events have been handled and the files have
   //       finished being written to the disk, this event happens even
   //       if there was an error
 
-  form.on('fileBegin', (name, file) => {
+  form.on('fileBegin', function (name, file) {
     // https://stackoverflow.com/a/30550190/4718107
     const fileType = file.type.split('/').pop()
     const fileExtension = file.name.split('.').pop()
@@ -138,17 +207,17 @@ app.post('/uploads', (req, res) => {
     ) {
       file.path = path.join(UPLOAD_DIR, file.name)
     } else {
-      console.log(`incorrect file type: ${fileType}`)
+      console.log('incorrect file type: ' + fileType)
     }
   })
 
-  form.on('file', (name, file) => {
-    console.log(`Uploaded ${file.name}`)
+  form.on('file', function (name, file) {
+    console.log('Uploaded ' + file.name)
   })
 
   const files = []
 
-  form.on('file', (name, file) => {
+  form.on('file', function (name, file) {
     files.push(file)
   })
 
@@ -156,7 +225,13 @@ app.post('/uploads', (req, res) => {
   let fieldsString = ''
   form.on('field', (name, value) => {
     fields[name] = value
-    fieldsString = `fieldsString${name}: ${value}<br />`
+    fieldsString =
+      value !== 'false' && name !== 'fileValid' && value !== 'null'
+        ? fieldsString +
+          `<span><span style='text-transform: capitalize;'>${xssFilters.inHTMLData(
+            name
+          )}</span>: ${xssFilters.inHTMLData(value)}</span><br /><br />`
+        : fieldsString
   })
 
   // Handle a possible error while parsing the request
@@ -165,13 +240,10 @@ app.post('/uploads', (req, res) => {
   let error = false
   form.on('error', err => {
     error = true
-    console.log('Error while parsing request to /uploads: ', err)
+    console.log('Error while parsing request to /uploads: ' + err)
     res
       .status(400) // Bad request
-      .json({
-        success: false,
-        status: 'Error parsing the request'
-      })
+      .json({ success: false, status: 'Error parsing the request' })
   })
 
   form.on('end', () => {
@@ -179,39 +251,39 @@ app.post('/uploads', (req, res) => {
     // need to prevent from sending a second response, otherwise the
     // server crashes
     if (error) return
-    console.log('Received fields:\n', JSON.stringify(fields, null, 2))
+    console.log('Received fields:\n' + JSON.stringify(fields, null, 2))
 
-    const emailBody = `Thank you for your submission!<br / <br />${fieldsString}`
+    const emailBody = `Thank you for your request!<br /> <br />${fieldsString}`
+
+    // TODO: Validate fields
 
     // Here is a good place to send the emails since we have the fields
     // We don't want to actually send emails during testing since it
     // would send a test email on every single commit
     if (ENABLE_SEND_EMAILS) {
-      const toEmail = new helper.Email('paulius.rimg1990@gmail.com')
-      const fromEmail = new helper.Email('test@example.com')
-      const subject = 'New Service Request Form Submission'
-      const content = new helper.Content('text/plain', emailBody)
-      const mail = new helper.Mail(fromEmail, subject, toEmail, content)
-      const request = makeSgRequest(mail)
-      console.log('Sending email...')
-      sg.API(request, (err, res) => {
-        if (error) {
-          console.log('Error response received')
-        }
-        console.log(res.statusCode)
-        console.log(res.body)
-        console.log(res.headers)
-      })
+      const msg = {
+        to: fields.email,
+        bcc:
+          process.env.NODE_ENV === 'production'
+            ? ['jweigel@franciscan.edu', process.env.SRF_EMAIL]
+            : 'jweigel@franciscan.edu',
+        from: 'resourcecenter@franciscan.edu',
+        replyTo: process.env.SRF_REPLY,
+        subject: 'New Service Request Form Submission',
+        text: 'Request submitted successfully!',
+        html: emailBody
+      }
+      sgMail
+        .send(msg)
+        .then(() => console.log('Mail sent successfully'))
+        .catch(error => console.error(error.toString()))
     }
 
     // Create project and attach files in wrike
-
     if (ENABLE_WRIKE) {
-      // eslint-disable-next-line
       wrikeMkFolder(fields['email'], fieldsString)
         .then(status => {
           const folderId = status.data[0].id
-          // eslint-disable-next-line
           for (const file of files) {
             // Formidable files are just metadata, not the actual file
             // Use the file name to create a ReadStream and pass it to
@@ -226,14 +298,14 @@ app.post('/uploads', (req, res) => {
               file.type
             ).catch(err => {
               console.log(
-                `Error while reading file for upload to Wrike: ${err}`
+                'Error while reading file for upload to Wrike: ' + err
               )
-              console.log(`Filename: ${file.path}`)
+              console.log('Filename: ' + file.path)
             })
           }
         })
         .catch(err => {
-          console.log(`Error while creating a project in Wrike: ${err}`)
+          console.log('Error while creating a project in Wrike: ' + err)
         })
     }
 
@@ -244,9 +316,8 @@ app.post('/uploads', (req, res) => {
   })
 })
 
-app.listen(
-  PORT,
-  _ => console.info('============================'),
-  console.info(`Server listening on PORT ${PORT}...`),
-  console.info('============================')
+app.listen(PORT, _ =>
+  console.info(
+    `Server listening on PORT ${PORT}... Mode ${process.env.NODE_ENV}`
+  )
 )
