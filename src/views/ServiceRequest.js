@@ -1,16 +1,18 @@
 // eslint-disable-next-line
-/* global notifyFormError */
+/* global notifyFormError enableSubmit */
 import React, { Component } from 'react'
 import DatePicker from 'material-ui/DatePicker'
+import IconCheckbox from '../components/IconCheckbox'
+import RaisedButton from '../components/MaterializeRaisedButton'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import { Link } from 'react-router-dom'
-import RaisedButton from '../components/MaterializeRaisedButton'
-import IconCheckbox from '../components/IconCheckbox'
+import { Helmet } from 'react-helmet'
 import '../styles/inputFile.css'
 import '../styles/serviceRequest.css'
 import infoLogo from '../img/info.svg'
-import { Helmet } from 'react-helmet'
+import { logPageView } from '../utils/analytics'
+
 import Formsy from 'formsy-react'
 import { FormsyText, FormsyCheckbox } from 'formsy-material-ui/lib'
 import {
@@ -21,9 +23,9 @@ import {
 } from '../data/serviceRequestFields'
 
 const fileExtensions =
-  'application/vnd.rar, application/pdf, application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, audio/mp4, audio/mpeg, text/plain, application/zip, video/quicktime, video/avi, audio/wav, image/jpeg, application/octet-stream, image/png'
-const HOSTNAME = process.env.HOST || 'localhost'
-const PORT = process.env.UPLOADS_PORT || 9000
+  'application/vnd.rar, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, audio/mp4, audio/mpeg, text/plain, application/zip, video/quicktime, video/avi, audio/wav, image/jpeg, application/octet-stream, image/png'
+
+const PORT = process.env.SERVER_PORT || 9000
 const HOST = process.env.UPLOADS_HOST || window.location.host.split(':')[0]
 const UPLOAD_URL =
   process.env.NODE_ENV === 'production'
@@ -38,14 +40,11 @@ const styles = {
   }
 }
 
+// https://github.com/Dogfalo/materialize/blob/master/js/forms.js#L192
 class ServiceRequest extends Component {
   constructor (props) {
     super(props)
-
-    const checkboxProps = [
-      ...this.leftCheckboxes,
-      ...this.rightCheckboxes
-    ].reduce(
+    const checkboxProps = [...leftCheckboxes, ...rightCheckboxes].reduce(
       (acc, label, index) => ({
         [this.formatLabelToProperty(label.name)]: false,
         ...acc
@@ -59,12 +58,16 @@ class ServiceRequest extends Component {
       },
       loadingDialogOpen: false,
       resultDialogOpen: false,
-      resultdialogText: null,
-      resultdialogSuccess: true,
+      resultDialogText: null,
+      resultDialogSuccess: true,
       canSubmit: false
     }
     Object.assign(this.state.form, checkboxProps)
     this.handleInputChange = this.handleInputChange.bind(this)
+  }
+
+  componentDidMount = () => {
+    logPageView()
   }
 
   enableSubmit = e => {
@@ -82,8 +85,8 @@ class ServiceRequest extends Component {
   notifyFormError = () => {
     this.setState({
       resultDialogOpen: true,
-      resultdialogSuccess: false,
-      resultdialogText: 'Something went wrong. Check for errors and try again.'
+      resultDialogSuccess: false,
+      resultDialogText: 'Something went wrong. Check for errors and try again.'
     })
   }
 
@@ -98,7 +101,6 @@ class ServiceRequest extends Component {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
-
     const form = Object.assign({}, this.state.form)
     form[name] = value
 
@@ -107,6 +109,7 @@ class ServiceRequest extends Component {
 
   handleFilePath = event => {
     const target = event.target
+    // Array.from converts array-like to array (so that map works)
     const files = Array.from(target.files)
     let fileNames = null
     const formState = this.state.form
@@ -143,32 +146,26 @@ class ServiceRequest extends Component {
         body: data
       }).then(res => res.json())
 
-      if (!response.success) {
-        throw response.status
-      }
+      if (!response.success) throw response.status
 
       this.setState({
         resultDialogOpen: true,
-        resultdialogSuccess: true,
-        resultdialogText: 'Your service request was sent successfully.'
+        resultDialogSuccess: true,
+        resultDialogText: 'Your service request was sent successfully.'
       })
     } catch (err) {
       const msg =
         typeof err === 'string'
           ? err
-          : 'An error accured while sending the request.'
+          : 'An error occurred while sending the request.'
       this.setState({
         resultDialogOpen: true,
-        resultdialogSuccess: false,
-        resultdialogText: msg
+        resultDialogSuccess: false,
+        resultDialogText: msg
       })
     }
 
     this.setState({ loadingDialogOpen: false })
-  }
-
-  alertHi = () => {
-    alert('Hi from the info button')
   }
 
   handleDialogClose = () => {
@@ -198,7 +195,9 @@ class ServiceRequest extends Component {
             {singleLineFields.map((field, index) => (
               <div className='col s12 m6' key={index}>
                 <FormsyText
-                  floatingLabelText={field.name}
+                  floatingLabelText={
+                    field.required ? field.name + ' *' : field.name
+                  }
                   name={field.name.toLowerCase()}
                   value={this.state.form[field.name]}
                   onChange={this.handleInputChange}
@@ -214,13 +213,15 @@ class ServiceRequest extends Component {
             {multiLineFields.map((field, index) => (
               <div className='col s12 m6' key={index}>
                 <FormsyText
-                  floatingLabelText={field.name}
+                  floatingLabelText={
+                    field.required ? field.name + ' *' : field.name
+                  }
                   name={field.name.toLowerCase()}
                   value={this.state.form[field.name]}
                   onChange={this.handleInputChange}
                   fullWidth
-                  multiline
                   id={`${field.name.toLowerCase()}-field`}
+                  multiLine
                   required={field.required}
                   validations={field.type}
                   validationError={field.error}
@@ -235,10 +236,10 @@ class ServiceRequest extends Component {
               <DatePicker hintText='Desired Completion Date' />
             </div>
             <div
-              className='col s12 m6'
+              className='col s12 m6 file-upload'
               style={{ marginBottom: '16px' }}
             >
-              <label for='upload' className='file-field input-field'>
+              <label htmlFor='upload' className='file-field input-field'>
                 <div className='btn'>
                   <span>Upload Files</span>
                   <input
@@ -258,14 +259,14 @@ class ServiceRequest extends Component {
                   <FormsyText
                     className='file-path validate formsy-multiline'
                     value={fileValue}
-                    multiline
+                    multiLine
                     rows={1}
                     fullWidth
                     readOnly
                     name='upload-text-field'
-                    id='fiel-path-field'
-                    validation={{
-                      myCustomFiveValidation: () => this.state.form.fileValid
+                    id='file-path-field'
+                    validations={{
+                      myCustomIsFiveValidation: () => this.state.form.fileValid
                     }}
                     validationError='Error'
                   />
@@ -273,51 +274,92 @@ class ServiceRequest extends Component {
               </label>
             </div>
             <div className='col s12 m6 checkbox-col'>
-              {leftCheckboxes.map((label, index) => {
-                <IconCheckbox
-                  label={label.name}
-                  name={label.name.toLowerCase()}
-                  isChecked={this.state.form[label.name.toLowerCase()]}
-                  key={index + label.name}
-                  handleCheck={e => this.handleInputChange(e)}
-                  style={styles.checkbox}
-                  inputStyle={styles.inputStyle}
-                  clickHandler={this.alertHi}
-                  src={infoLogo}
-                  alt='Info Button'
-                  icon={label.icon ? label.icon : false}
-                  dialogText={label.dialogText && label.dialogText}
-                  dialogTitle={label.dialogTitle && label.dialogTitle}
-                />
-              })}
+              {leftCheckboxes.map((label, index) => (
+                <div key={index}>
+                  <IconCheckbox
+                    label={label.name}
+                    name={label.name.toLowerCase()}
+                    isChecked={this.state.form[label.name.toLowerCase()]}
+                    key={index + label.name}
+                    handleCheck={event => this.handleInputChange(event)}
+                    style={styles.checkbox}
+                    inputStyle={styles.inputStyle}
+                    src={infoLogo}
+                    alt='Info Button'
+                    icon={label.icon ? label.icon : false}
+                    dialogText={label.dialogText && label.dialogText}
+                    dialogTitle={label.dialogTitle && label.dialogTitle}
+                    conditionalFields={label.conditionalFields}
+                  />
+                  {label.conditionalFields &&
+                    this.state.form[label.name.toLowerCase()] &&
+                    label.conditionalFields.map(field => (
+                      <FormsyText
+                        key={field.name}
+                        floatingLabelText={
+                          field.required ? field.name + ' *' : field.name
+                        }
+                        name={field.name.toLowerCase()}
+                        value={this.state.form[field.name]}
+                        onChange={this.handleInputChange}
+                        fullWidth
+                        id={`${field.name.toLowerCase()}-field`}
+                        required={field.required}
+                        validations={field.type}
+                        validationError={field.error}
+                        className='formsy-input'
+                        style={{ margin: '0 0 8px 0' }}
+                      />
+                    ))}
+                </div>
+              ))}
             </div>
             <div className='col s12 m6 checkbox-col'>
               {rightCheckboxes.map((label, index) => (
-                <IconCheckbox
-                  label={label.name}
-                  name={label.name.toLowerCase()}
-                  isChecked={this.state.form[label.name.toLowerCase()]}
-                  key={index + label.name}
-                  handleCheck={e => this.handleInputChange(e)}
-                  style={styles.checkbox}
-                  inputStyle={styles.inputStyle}
-                  clickHandler={this.alertHi}
-                  src={infoLogo}
-                  alt='Info Button'
-                  icon={label.icon ? label.icon : false}
-                  dialogText={label.dialogText && label.dialogText}
-                  dialogTitle={label.dialogTitle && label.dialogTitle}
-                />
+                <div key={index}>
+                  <IconCheckbox
+                    label={label.name}
+                    name={label.name.toLowerCase()}
+                    isChecked={this.state.form[label.name.toLowerCase()]}
+                    key={index + label.name}
+                    handleCheck={event => this.handleInputChange(event)}
+                    style={styles.checkbox}
+                    inputStyle={styles.inputStyle}
+                    src={infoLogo}
+                    alt='Info Button'
+                    icon={label.icon ? label.icon : false}
+                    dialogText={label.dialogText && label.dialogText}
+                    dialogTitle={label.dialogTitle && label.dialogTitle}
+                    conditionalFields={label.conditionalFields}
+                  />
+                  {label.conditionalFields &&
+                    this.state.form[label.name.toLowerCase()] &&
+                    label.conditionalFields.map(field => (
+                      <FormsyText
+                        key={field.name}
+                        floatingLabelText={
+                          field.required ? field.name + ' *' : field.name
+                        }
+                        name={field.name.toLowerCase()}
+                        value={this.state.form[field.name]}
+                        onChange={this.handleInputChange}
+                        fullWidth
+                        id={`${field.name.toLowerCase()}-field`}
+                        required={field.required}
+                        validations={field.type}
+                        validationError={field.error}
+                        className='formsy-input'
+                        style={{ margin: '0 0 8px 0' }}
+                      />
+                    ))}
+                </div>
               ))}
             </div>
-            <div
-              className='col s12'
-              style={{ marginBottom: '16px' }}
-            >
+            <div className='col s12' style={{ marginTop: '16px' }}>
               <RaisedButton
                 label='Submit'
-                id='submit-button'
                 type='submit'
+                id='submit-button'
                 buttonStyle={{
                   cursor: this.state.canSubmit ? 'pointer' : 'not-allowed'
                 }}
@@ -337,7 +379,8 @@ class ServiceRequest extends Component {
                         style={{ fontWeight: 500 }}
                       >
                         Planning Guide
-                      </Link>
+                      </Link>{' '}
+                      *
                     </span>
                   }
                   style={styles.checkbox}
@@ -364,7 +407,7 @@ class ServiceRequest extends Component {
             />
           ]}
         >
-          this.state.resultdialogText
+          {this.state.resultDialogText}
         </Dialog>
       </div>
     )
