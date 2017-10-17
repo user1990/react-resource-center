@@ -181,7 +181,7 @@ app.post('/uploads', (req, res) => {
     if (error) return
     console.log('Received fields:\n', JSON.stringify(fields, null, 2))
 
-    // TODO: Validate fields
+    const emailBody = `Thank you for your submission!<br / <br />${fieldsString}`
 
     // Here is a good place to send the emails since we have the fields
     // We don't want to actually send emails during testing since it
@@ -190,7 +190,7 @@ app.post('/uploads', (req, res) => {
       const toEmail = new helper.Email('paulius.rimg1990@gmail.com')
       const fromEmail = new helper.Email('test@example.com')
       const subject = 'New Service Request Form Submission'
-      const content = new helper.Content('text/plain', fieldsString)
+      const content = new helper.Content('text/plain', emailBody)
       const mail = new helper.Mail(fromEmail, subject, toEmail, content)
       const request = makeSgRequest(mail)
       console.log('Sending email...')
